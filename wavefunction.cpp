@@ -1,4 +1,3 @@
-
 #include "wavefunction.hpp"
 
 const double PI = 3.141592653589793238462643383279502884197169399375105820974944592307816406286208998628034825342117067982;
@@ -14,7 +13,7 @@ WaveFunction::WaveFunction( char* inputpath , int energy ) {
 	readinput( inputpath );
 
 	//Calculate table of integrals
-	//generate_integral_table();
+	generate_integral_table();
 
 }
 
