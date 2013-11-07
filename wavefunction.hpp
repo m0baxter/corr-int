@@ -64,7 +64,7 @@ class WaveFunction {
       int r_index( double );
       
       
-      double R_T( const char, int , int , double );
+      double R( const char, int , int , double );
       double R_gs( const char, int , int , double );
       double Hep1( double );
       
