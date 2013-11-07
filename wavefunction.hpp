@@ -62,11 +62,14 @@ class WaveFunction {
       void readamplitudes_T( const char, int );
       void readinput( const char, char* );
       int r_index( double );
-      double R_T( int , int , double );
-      double R_T( int , int , double );
-      double R_gs_P( int , int , double );
-      double R_gs_P( int , int , double );
+      
+      
+      double R_T( const char, int , int , double );
+      double R_gs( const char, int , int , double );
       double Hep1( double );
+      
+            //Here
+      
       //Modify these later:
       double* integrand(int , int , int , int , int , int , int , int );
       void generate_integral_table();

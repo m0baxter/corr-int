@@ -388,17 +388,27 @@ int WaveFunction::r_index( double x) {
 }
 
 
-double WaveFunction::R(int n, int l, double x) {
+double WaveFunction::R( const char centre, int n, int l, double x) {
    /*Returns the value of the R_nl function evaluated at x. x must be in r (ie a lattice point).*/
-
-   return Rad[n][l][r_index(x)];
+   
+   switch (centre) {
+      case 'T':
+         return Rad_T[n][l][r_index(x)];
+      case 'P':
+         return Rad_P[n][l][r_index(x)];
+   }
 }
 
 
-double WaveFunction::R_gs(int n, int l, double x) {
+double WaveFunction::R_gs( const char centre, int n, int l, double x) {
    /*Returns the value of the R_nl function evaluated at x. x must be in r (ie a lattice point).*/
-
-   return Rad_gs[n][l][r_index(x)];
+   
+   switch (centre) {
+      case 'T':
+         return Rad_gs_T[n][l][r_index(x)];
+      case 'P':
+         return Rad_gs_P[n][l][r_index(x)];
+   }
 }
 
 
