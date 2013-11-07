@@ -57,14 +57,10 @@ class WaveFunction {
 
       //Functions:
       void readlattice();
-      void readradial_T();
-      void readradial_gs_T();
-      void readradial_P();
-      void readradial_gs_P();
-      void readamplitudes_T( int );
-      void readamplitudes_P( int );
-      void readinput_T( char* );
-      void readinput_P( char* );      
+      void readradial( const char );
+      void readradial_gs( const char );
+      void readamplitudes_T( const char, int );
+      void readinput( const char, char* );
       int r_index( double );
       double R_T( int , int , double );
       double R_T( int , int , double );

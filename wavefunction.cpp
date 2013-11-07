@@ -8,10 +8,14 @@ WaveFunction::WaveFunction( char* inputpath , int energy ) {
 
    //initialize tables:
    readlattice();
-   readradial();
-   readradial_gs();
-   readamplitudes( energy );
-   readinput( inputpath );
+   readradial('T');
+   readradial('P');
+   readradial_gs('T');
+   readradial_gs('P');
+   readamplitudes( 'T', energy );
+   readamplitudes( 'P', energy );
+   readinput( 'T', inputpath );
+   readinput( 'P', inputpath );
 
    //Calculate table of integrals
    generate_integral_table();
@@ -68,7 +72,7 @@ void WaveFunction::readlattice() {
 }
 
 
-void WaveFunction::readradial() {
+void WaveFunction::readradial( const char centre ) {
    /*Reads/stores the R_{nl} function data.*/
 
    std::string path;
@@ -76,14 +80,28 @@ void WaveFunction::readradial() {
 
    for (int n = 1; n < 5; ++n) {
       for (int l = 0; l < n; ++l) {
-         //path = "/home/baxter/Documents/Observable/Input/radial/silverman_1s1s/R_";
-         //path = "/home/baxter/Documents/Observable/Input/radial/silverman full/R_";
-           path = "/home/baxter/Documents/Observable/Input/radial/MCHF_1s-2p/R_";
-         //path = "/home/baxter/Documents/Observable/Input/radial/MCHF_1s-4s/R_";
-         //path = "/home/baxter/Documents/Observable/Input/radial/MCHF_1s-4s(all)/R_";
-         //path = "/home/baxter/Documents/Observable/Input/radial/MCHF_1s-4d/R_";
-         //path = "/home/baxter/Documents/Observable/Input/radial/MCHF_1s-4d(all)/R_";
-         //path = "/home/baxter/Documents/Observable/Input/radial/MCHF_1s-4f/R_";
+      
+         switch (centre) {
+            case 'T':
+               //path = "/home/baxter/Documents/Observable/Input/radial/silverman_1s1s/R_";
+               //path = "/home/baxter/Documents/Observable/Input/radial/silverman full/R_";
+                 path = "/home/baxter/Documents/Observable/Input/radial/MCHF_1s-2p/R_";
+               //path = "/home/baxter/Documents/Observable/Input/radial/MCHF_1s-4s/R_";
+               //path = "/home/baxter/Documents/Observable/Input/radial/MCHF_1s-4s(all)/R_";
+               //path = "/home/baxter/Documents/Observable/Input/radial/MCHF_1s-4d/R_";
+               //path = "/home/baxter/Documents/Observable/Input/radial/MCHF_1s-4d(all)/R_";
+               //path = "/home/baxter/Documents/Observable/Input/radial/MCHF_1s-4f/R_";
+               
+            case 'P':
+               //path = "/home/baxter/Documents/Observable/Input/radial/silverman_1s1s/R_";
+               //path = "/home/baxter/Documents/Observable/Input/radial/silverman full/R_";
+                 path = "/home/baxter/Documents/Observable/Input/radial/MCHF_1s-2p/R_";
+               //path = "/home/baxter/Documents/Observable/Input/radial/MCHF_1s-4s/R_";
+               //path = "/home/baxter/Documents/Observable/Input/radial/MCHF_1s-4s(all)/R_";
+               //path = "/home/baxter/Documents/Observable/Input/radial/MCHF_1s-4d/R_";
+               //path = "/home/baxter/Documents/Observable/Input/radial/MCHF_1s-4d(all)/R_";
+               //path = "/home/baxter/Documents/Observable/Input/radial/MCHF_1s-4f/R_";
+         }
 
          std::stringstream ss;
          ss << n << l << ".txt";
@@ -98,8 +116,14 @@ void WaveFunction::readradial() {
 
          delete[] pth;
 
-         //Give R_nl(0) some value (doesn't really matter what it is as long as its not zero:
-         Rad[n][l][0] = 1.0;
+         //Give R_nl^centre(0) some value (doesn't really matter what it is as long as its not zero:
+         switch (centre) {
+            case 'T':
+               Rad_T[n][l][0] = 1.0;
+            case 'P':
+               Rad_P[n][l][0] = 1.0;
+         }
+
 
          for (int i = 1; i < LEN; ++i) {
             //get a line
@@ -108,7 +132,13 @@ void WaveFunction::readradial() {
             ssline << line;
 
             //Store:
-            ssline >> Rad[n][l][i];
+            switch (centre) {
+               case 'T':
+                  ssline >> Rad_T[n][l][i];
+               case 'P':
+                  ssline >> Rad_P[n][l][i];
+            }
+
          }
          readfile.close();
       }
@@ -124,14 +154,28 @@ void WaveFunction::readradial_gs() {
 
    for (int n = 1; n < 5; ++n) {
       for (int l = 0; l < n; ++l) {
-         //path = "/home/baxter/Documents/Observable/Input/radial/Ground state/silverman_1s1sp/R_";
-         //path = "/home/baxter/Documents/Observable/Input/radial/Ground state/silverman_full/R_";
-           path = "/home/baxter/Documents/Observable/Input/radial/Ground state/MCHF_1s-2p/R_";
-         //path = "/home/baxter/Documents/Observable/Input/radial/Ground state/MCHF_1s-4s/R_";
-         //path = "/home/baxter/Documents/Observable/Input/radial/Ground state/MCHF_1s-4s(all)/R_";
-         //path = "/home/baxter/Documents/Observable/Input/radial/Ground state/MCHF_1s-4d/R_";
-         //path = "/home/baxter/Documents/Observable/Input/radial/Ground state/MCHF_1s-4d(all)/R_";
-         //path = "/home/baxter/Documents/Observable/Input/radial/Ground state/MCHF_1s-4f/R_";
+      
+         switch (centre) {
+            case 'T':
+               //path = "/home/baxter/Documents/Observable/Input/radial/Ground state/silverman_1s1sp/R_";
+               //path = "/home/baxter/Documents/Observable/Input/radial/Ground state/silverman_full/R_";
+                path = "/home/baxter/Documents/Observable/Input/radial/Ground state/MCHF_1s-2p/R_";
+               //path = "/home/baxter/Documents/Observable/Input/radial/Ground state/MCHF_1s-4s/R_";
+               //path = "/home/baxter/Documents/Observable/Input/radial/Ground state/MCHF_1s-4s(all)/R_";
+               //path = "/home/baxter/Documents/Observable/Input/radial/Ground state/MCHF_1s-4d/R_";
+               //path = "/home/baxter/Documents/Observable/Input/radial/Ground state/MCHF_1s-4d(all)/R_";
+               //path = "/home/baxter/Documents/Observable/Input/radial/Ground state/MCHF_1s-4f/R_";
+               
+            case 'P':
+               //path = "/home/baxter/Documents/Observable/Input/radial/Ground state/silverman_1s1sp/R_";
+               //path = "/home/baxter/Documents/Observable/Input/radial/Ground state/silverman_full/R_";
+                path = "/home/baxter/Documents/Observable/Input/radial/Ground state/MCHF_1s-2p/R_";
+               //path = "/home/baxter/Documents/Observable/Input/radial/Ground state/MCHF_1s-4s/R_";
+               //path = "/home/baxter/Documents/Observable/Input/radial/Ground state/MCHF_1s-4s(all)/R_";
+               //path = "/home/baxter/Documents/Observable/Input/radial/Ground state/MCHF_1s-4d/R_";
+               //path = "/home/baxter/Documents/Observable/Input/radial/Ground state/MCHF_1s-4d(all)/R_";
+               //path = "/home/baxter/Documents/Observable/Input/radial/Ground state/MCHF_1s-4f/R_";
+         }
 
          std::stringstream ss;
          ss << n << l << ".txt";
@@ -156,7 +200,12 @@ void WaveFunction::readradial_gs() {
             ssline << line;
 
             //Store:
-            ssline >> Rad_gs[n][l][i];
+            switch (centre) {
+               case 'T':
+                  ssline >> Rad_gs_T[n][l][i];
+               case 'P':
+                  ssline >> Rad_gs_P[n][l][i];
+            }
 
          }
          readfile.close();
@@ -165,19 +214,29 @@ void WaveFunction::readradial_gs() {
 }
 
 
-void WaveFunction::readamplitudes( int energy ) {
+void WaveFunction::readamplitudes( const char centre, int energy ) {
    /*Reads in the impact parameter and amplitude data and stores it in b and amp. The energy parameter must be 100 or 2000.*/
 
    std::string line;
    std::stringstream ss;
    char* tok1;
    char* tok2;
-
+   
    //setup the path string:
-     std::string path = "/home/baxter/Documents/Observable/Input/amplitudes/old/E";
-   //std::string path = "/home/baxter/Documents/Observable/Input/amplitudes/OPM/E";
-   //std::string path = "/home/baxter/Documents/Observable/Input/amplitudes/MCHF_1s4d/E";
-   //std::string path = "/home/baxter/Documents/Observable/Input/amplitudes/MCHF_1s4d(all)/E";
+   switch (centre) {
+      case 'T':
+           std::string path = "/home/baxter/Documents/Observable/Input/amplitudes/old/E";
+         //std::string path = "/home/baxter/Documents/Observable/Input/amplitudes/OPM/E";
+         //std::string path = "/home/baxter/Documents/Observable/Input/amplitudes/MCHF_1s4d/E";
+         //std::string path = "/home/baxter/Documents/Observable/Input/amplitudes/MCHF_1s4d(all)/E";
+
+      case 'P':   
+           std::string path = "/home/baxter/Documents/Observable/Input/amplitudes/old/E";
+         //std::string path = "/home/baxter/Documents/Observable/Input/amplitudes/OPM/E";
+         //std::string path = "/home/baxter/Documents/Observable/Input/amplitudes/MCHF_1s4d/E";
+         //std::string path = "/home/baxter/Documents/Observable/Input/amplitudes/MCHF_1s4d(all)/E";   
+   }
+
    ss << energy << ".txt";
    path += ss.str();
 
@@ -206,7 +265,6 @@ void WaveFunction::readamplitudes( int energy ) {
       ss1 >> b[i];
 
       //store value in b.
-
       for (int n = 1; n < 5; ++n) {
          for (int l = 0; l < n; ++l) {
             for (int m = 0; m < 2*l + 1; ++m) {
@@ -237,7 +295,12 @@ void WaveFunction::readamplitudes( int energy ) {
                im >> impart;
 
                //convert to complex(tok1,tok2) and store in amps[i][n][l][m].
-               amps[i][n][l][m] = std::complex<double>( realpart, impart );
+               switch (centre) {
+                  case 'T':
+                     amps_T[i][n][l][m] = std::complex<double>( realpart, impart );
+                  case 'P':
+                     amps_P[i][n][l][m] = std::complex<double>( realpart, impart );
+               }
             }
          }
       }
@@ -247,7 +310,7 @@ void WaveFunction::readamplitudes( int energy ) {
 }
 
 
-void WaveFunction::readinput( char* inputpath ) {
+void WaveFunction::readinput( const char, char* inputpath ) {
    /*Reads and stores the wave function quantum number data from the file located at inputpath.*/
 
    std::ifstream readfile ( inputpath );
@@ -297,8 +360,14 @@ void WaveFunction::readinput( char* inputpath ) {
       delete[] cstr_line;
    }
    
-   terms = temp_t;
-   factors = temp_f;
+   switch (centre) {
+      case 'T':
+         terms_T = temp_t;
+         factors_T = temp_f;
+      case 'P':
+         terms_P = temp_t;
+         factors_P = temp_f;
+   }
 
    readfile.close();
 }
