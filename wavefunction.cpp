@@ -14,19 +14,19 @@ P + G = 4
 
 const double PI = 3.141592653589793238462643383279502884197169399375105820974944592307816406286208998628034825342117067982;
 
-WaveFunction::WaveFunction( char* inputpath , int energy, bool wb ) {
+WaveFunction::WaveFunction( const char* inputpath_T, const char* inputpath_P, int energy, bool wb ) {
    /*Constructor for objects of class WaveFunction.*/
 
    //initialize tables:
    readlattice();
    readradial('T', 'D');
    readradial('P', 'D');
-   readradial('T'. 'G');
+   readradial('T', 'G');
    readradial('P', 'G');
    readamplitudes( 'T', energy );
    readamplitudes( 'P', energy );
-   readinput( 'T', inputpath );
-   readinput( 'P', inputpath );
+   readinput( 'T', inputpath_T );
+   readinput( 'P', inputpath_P );
 
    //Calculate table of integrals
    if (!wb){
@@ -39,8 +39,10 @@ WaveFunction::WaveFunction( char* inputpath , int energy, bool wb ) {
 WaveFunction::~WaveFunction() {
    /*Destroys an object of class WaveFunction.*/
 
-   delete [] terms;
-   delete [] factors;
+   delete [] terms_T;
+   delete [] terms_P;
+   delete [] factors_T;
+   delete [] factors_P;
 }
 
 
@@ -71,11 +73,11 @@ void WaveFunction::readlattice() {
    //Open file to be read:
    //path = "/home/baxter/Documents/Observable/Input/radial/silverman_1s1s/lattice.txt";
    //path = "/home/baxter/Documents/Observable/Input/radial/silverman full/lattice.txt";
-     path = "/home/baxter/Documents/Observable/Input/radial/MCHF_1s-2p/lattice.txt";
+   //path = "/home/baxter/Documents/Observable/Input/radial/MCHF_1s-2p/lattice.txt";
    //path = "/home/baxter/Documents/Observable/Input/radial/MCHF_1s-4s/lattice.txt";
    //path = "/home/baxter/Documents/Observable/Input/radial/MCHF_1s-4s(all)/lattice.txt";
    //path = "/home/baxter/Documents/Observable/Input/radial/MCHF_1s-4d/lattice.txt";
-   //path = "/home/baxter/Documents/Observable/Input/radial/MCHF_1s-4d(all)/lattice.txt";
+     path = "/home/baxter/Documents/Observable/Input/radial/MCHF_1s-4d(all)/lattice.txt";
    //path = "/home/baxter/Documents/Observable/Input/radial/MCHF_1s-4f/lattice.txt";
 
    std::ifstream readfile(path);
@@ -113,44 +115,44 @@ void WaveFunction::readradial( const char centre, const char type ) {
             case 'T' + 'D': //target dynamic
                //path = "/home/baxter/Documents/Observable/Input/radial/silverman_1s1s/R_";
                //path = "/home/baxter/Documents/Observable/Input/radial/silverman full/R_";
-                 path = "/home/baxter/Documents/Observable/Input/radial/MCHF_1s-2p/R_";
+               //path = "/home/baxter/Documents/Observable/Input/radial/MCHF_1s-2p/R_";
                //path = "/home/baxter/Documents/Observable/Input/radial/MCHF_1s-4s/R_";
                //path = "/home/baxter/Documents/Observable/Input/radial/MCHF_1s-4s(all)/R_";
                //path = "/home/baxter/Documents/Observable/Input/radial/MCHF_1s-4d/R_";
-               //path = "/home/baxter/Documents/Observable/Input/radial/MCHF_1s-4d(all)/R_";
+                 path = "/home/baxter/Documents/Observable/Input/radial/MCHF_1s-4d(all)/R_";
                //path = "/home/baxter/Documents/Observable/Input/radial/MCHF_1s-4f/R_";
                break;
                
             case 'P' + 'D': //projectile dynamic
                //path = "/home/baxter/Documents/Observable/Input/radial/silverman_1s1s/R_";
                //path = "/home/baxter/Documents/Observable/Input/radial/silverman full/R_";
-                 path = "/home/baxter/Documents/Observable/Input/radial/MCHF_1s-2p/R_";
+               //path = "/home/baxter/Documents/Observable/Input/radial/MCHF_1s-2p/R_";
                //path = "/home/baxter/Documents/Observable/Input/radial/MCHF_1s-4s/R_";
                //path = "/home/baxter/Documents/Observable/Input/radial/MCHF_1s-4s(all)/R_";
                //path = "/home/baxter/Documents/Observable/Input/radial/MCHF_1s-4d/R_";
-               //path = "/home/baxter/Documents/Observable/Input/radial/MCHF_1s-4d(all)/R_";
+                 path = "/home/baxter/Documents/Observable/Input/radial/MCHF_1s-4d(all)/R_";
                //path = "/home/baxter/Documents/Observable/Input/radial/MCHF_1s-4f/R_";
                break;
                
             case 'T' + 'G': //target ground state
                //path = "/home/baxter/Documents/Observable/Input/radial/Ground state/silverman_1s1sp/R_";
                //path = "/home/baxter/Documents/Observable/Input/radial/Ground state/silverman_full/R_";
-                path = "/home/baxter/Documents/Observable/Input/radial/Ground state/MCHF_1s-2p/R_";
+               //path = "/home/baxter/Documents/Observable/Input/radial/Ground state/MCHF_1s-2p/R_";
                //path = "/home/baxter/Documents/Observable/Input/radial/Ground state/MCHF_1s-4s/R_";
                //path = "/home/baxter/Documents/Observable/Input/radial/Ground state/MCHF_1s-4s(all)/R_";
                //path = "/home/baxter/Documents/Observable/Input/radial/Ground state/MCHF_1s-4d/R_";
-               //path = "/home/baxter/Documents/Observable/Input/radial/Ground state/MCHF_1s-4d(all)/R_";
+                 path = "/home/baxter/Documents/Observable/Input/radial/Ground state/MCHF_1s-4d(all)/R_";
                //path = "/home/baxter/Documents/Observable/Input/radial/Ground state/MCHF_1s-4f/R_";
                break;
                
             case 'P' + 'G': //projectile ground state
                //path = "/home/baxter/Documents/Observable/Input/radial/Ground state/silverman_1s1sp/R_";
                //path = "/home/baxter/Documents/Observable/Input/radial/Ground state/silverman_full/R_";
-                path = "/home/baxter/Documents/Observable/Input/radial/Ground state/MCHF_1s-2p/R_";
+               //path = "/home/baxter/Documents/Observable/Input/radial/Ground state/MCHF_1s-2p/R_";
                //path = "/home/baxter/Documents/Observable/Input/radial/Ground state/MCHF_1s-4s/R_";
                //path = "/home/baxter/Documents/Observable/Input/radial/Ground state/MCHF_1s-4s(all)/R_";
                //path = "/home/baxter/Documents/Observable/Input/radial/Ground state/MCHF_1s-4d/R_";
-               //path = "/home/baxter/Documents/Observable/Input/radial/Ground state/MCHF_1s-4d(all)/R_";
+                 path = "/home/baxter/Documents/Observable/Input/radial/Ground state/MCHF_1s-4d(all)/R_";
                //path = "/home/baxter/Documents/Observable/Input/radial/Ground state/MCHF_1s-4f/R_";
                break;
                
@@ -194,7 +196,7 @@ void WaveFunction::readradial( const char centre, const char type ) {
 void WaveFunction::readamplitudes( const char centre, int energy ) {
    /*Reads in the impact parameter and amplitude data and stores it in b and amp. The energy parameter must be 100 or 2000.*/
 
-   std::string line;
+   std::string path, line;
    std::stringstream ss;
    char* tok1;
    char* tok2;
@@ -204,14 +206,15 @@ void WaveFunction::readamplitudes( const char centre, int energy ) {
    //setup the path string:
    switch (centre) {
       case 'T':
-           std::string path = "/home/baxter/Documents/Observable/Input/amplitudes/old/E";
-         //std::string path = "/home/baxter/Documents/Observable/Input/amplitudes/OPM/E";
-         //std::string path = "/home/baxter/Documents/Observable/Input/amplitudes/MCHF_1s4d/E";
-         //std::string path = "/home/baxter/Documents/Observable/Input/amplitudes/MCHF_1s4d(all)/E";
+         //path = "/home/baxter/Documents/Observable/Input/amplitudes/old/E";
+         //path = "/home/baxter/Documents/Observable/Input/amplitudes/OPM/E";
+         //path = "/home/baxter/Documents/Observable/Input/amplitudes/MCHF_1s4d/E";
+           path = "/home/baxter/Documents/Observable/Input/amplitudes/MCHF_1s4d(all)/E";
          break;
 
-      case 'P':   
-           std::string path = "/home/baxter/Documents/Observable/Input/amplitudes/old/E";
+      case 'P':
+           path = "/home/baxter/Desktop/E";   
+         //path = "/home/baxter/Documents/Observable/Input/amplitudes/old/E";
          //std::string path = "/home/baxter/Documents/Observable/Input/amplitudes/OPM/E";
          //std::string path = "/home/baxter/Documents/Observable/Input/amplitudes/MCHF_1s4d/E";
          //std::string path = "/home/baxter/Documents/Observable/Input/amplitudes/MCHF_1s4d(all)/E";   
@@ -291,23 +294,39 @@ void WaveFunction::readamplitudes( const char centre, int energy ) {
 }
 
 
-void WaveFunction::readinput( const char, char* inputpath ) {
+void WaveFunction::readinput( const char centre, const char* inputpath ) {
    /*Reads and stores the wave function quantum number data from the file located at inputpath.*/
 
    std::ifstream readfile ( inputpath );
    std::string line;
    char* tok;
+   int N;
 
    //Read the number of terms:
    getline(readfile,line);
-   N_terms = atoi(line.c_str());
+   
+   switch (centre) {
+      case 'T':
+         N_terms_T = atoi(line.c_str());
+         N = N_terms_T;
+         break;
+         
+      case 'P':
+         N_terms_P = atoi(line.c_str());
+         N = N_terms_P;
+         break;
+         
+      default:
+         std::cout << "readinput error: Improper centre label" << std::endl;
+         return;
+   }
 
    //temperary varibles for holding factors and terms
-   double *temp_f = new double[N_terms];
-   int (*temp_t)[2][3] = new int[N_terms][2][3];
+   double *temp_f = new double[N];
+   int (*temp_t)[2][3] = new int[N][2][3];
 
    //Read the other data:
-   for (int i = 0; i < N_terms; ++i) {
+   for (int i = 0; i < N; ++i) {
 
       //get next line:
       getline(readfile,line);
@@ -502,14 +521,21 @@ void WaveFunction::generate_integral_table_wb( const char centre, double N  ) {
 }
 
 
-double table( const char centre, int n1, int l1, int n2, int l2 , int n1_gs , int l1_gs, int n2_gs , int l2_gs ) {
+double WaveFunction::table( const char centre, int n1, int l1, int n2, int l2 , int n1_gs , int l1_gs, int n2_gs , int l2_gs ) {
    /*Returns the integral for the given radial function identifiers on centre.*/
    
    return int_table[TP_toint(centre)][n1][l1][n2][l2][n1_gs][l1_gs][n2_gs][l2_gs];
 }
 
 
-double  WaveFunction::correlationintegral( int a ) {
+double WaveFunction::table_wb( const char centre, int n1, int l1, int n2, int l2 , int n1_gs , int l1_gs, int n2_gs , int l2_gs ) {
+   /*Returns the integral for the given radial function identifiers on centre.*/
+   
+   return int_table_wb[TP_toint(centre)][n1][l1][n2][l2][n1_gs][l1_gs][n2_gs][l2_gs];
+}
+
+
+double  WaveFunction::correlationintegral( const char c, int k ) {
    /*Calculates the correlation integral for the impact parameter b[i].*/
 
    //Holds the result:
@@ -521,29 +547,53 @@ double  WaveFunction::correlationintegral( int a ) {
 
    //Used for temperary storage:
    double phase, phase1, phase2, G3, G4;
+   
+   //Holds the ground state configuration information:
+   int N;
+   double *t;
+   int (*T)[2][3];
+   
+   //Pick the ground state configuration data on cnetre c:
+   switch (c) {
+      case 'T':
+         N = N_terms_T;
+         t = factors_T;
+         T = terms_T;
+         break;
+         
+      case 'P':
+         N = N_terms_P;
+         t = factors_P;
+         T = terms_P;
+         break;
+         
+      default:
+         std::cout << "Correlation integral error: Improper centre signifier" << std::endl;
+         return 0;
+   }
 
    //Sweep through the terms of the wave function:
-   for (int i = 0; i < N_terms; ++i) {
-      for (int j = 0; j < N_terms; ++j) {
+   for (int i = 0; i < N; ++i) {
+      for (int j = 0; j < N; ++j) {
 
          //perform the angular intergal of the first particle by sweeping through the possible Gaunt integrals:
-         for (int L1 = abs( terms[i][0][1] - terms[j][0][1] ); L1 <= terms[i][0][1] + terms[j][0][1]; ++L1 ) {
+         for (int L1 = abs( T[i][0][1] - T[j][0][1] ); L1 <= T[i][0][1] + T[j][0][1]; ++L1 ) {
             for (int M1 = -L1; M1 <= L1; ++M1) {
 
-               if ( IsEven( terms[i][0][1] + terms[j][0][1] + L1) && ! (TriangleBroken( terms[i][0][1], terms[j][0][1], L1 ) ) && (terms[i][0][2] -terms[j][0][2] + M1 == 0) ) { //here
+               if ( IsEven( T[i][0][1] + T[j][0][1] + L1) && ! (TriangleBroken( T[i][0][1], T[j][0][1], L1 ) ) && ( T[i][0][2] - T[j][0][2] + M1 == 0) ) {
 
-                  G1 = gaunt (terms[i][0][1], terms[i][0][2], terms[j][0][1], -terms[j][0][2], L1, M1);
+                  G1 = gaunt ( T[i][0][1], T[i][0][2], T[j][0][1], -T[j][0][2], L1, M1 );
 
                   //perform the angular intergal of the second particle by sweeping through the possible Gaunt integrals:
-                  for (int L2 = abs( terms[i][1][1] - terms[j][1][1] ); L2 <= terms[i][1][1] + terms[j][1][1]; ++L2 ) {
+                  for (int L2 = abs( T[i][1][1] - T[j][1][1] ); L2 <= T[i][1][1] + T[j][1][1]; ++L2 ) {
                      for (int M2 = -L2; M2 <= L2; ++M2) {
 
-                        if ( IsEven( terms[i][1][1] + terms[j][1][1] + L2) && ! (TriangleBroken( terms[i][1][1], terms[j][1][1], L2 ) ) && (terms[i][1][2] -terms[j][1][2] + M1 == 0) ) { //here
+                        if ( IsEven( T[i][1][1] + T[j][1][1] + L2) && ! (TriangleBroken( T[i][1][1], T[j][1][1], L2 ) ) && ( T[i][1][2] - T[j][1][2] + M1 == 0) ) {
 
-                           G2 =  gaunt (terms[i][1][1], terms[i][1][2], terms[j][1][1], -terms[j][1][2], L2, M2);
+                           G2 =  gaunt ( T[i][1][1], T[i][1][2], T[j][1][1], -T[j][1][2], L2, M2);
 
                            //calculate the pahse we neglected untill now:
-                           phase = pow(-1.0, terms[j][0][2] + terms[j][1][2] );
+                           phase = pow(-1.0, T[j][0][2] + T[j][1][2] );
 
                            //Perform the two sums from the P_lm functions:
                            for (int n1 = 1; n1 < MAXn; ++n1) {
@@ -556,7 +606,7 @@ double  WaveFunction::correlationintegral( int a ) {
                                                 for (int lp2 = 0; lp2 < np2; ++lp2) {
                                                    //Store the value of the products of the complete integrals:
 
-                                                   double temp = phase * G1 * factors[i] * int_table[n1][l1][np1][lp1][ terms[i][0][0] ][ terms[i][0][1] ][ terms[j][0][0] ][ terms[j][0][1] ] * G2 * factors[j] * int_table[n2][l2][np2][lp2][ terms[i][1][0] ][ terms[i][1][1] ][ terms[j][1][0] ][ terms[j][1][1] ];
+                                                   double temp = phase * G1 * t[i] * table( c, n1, l1, np1, lp1, T[i][0][0], T[i][0][1], T[j][0][0] , T[j][0][1] ) * G2 * t[j] * table( c, n2, l2, np2, lp2, T[i][1][0], T[i][1][1], T[j][1][0] , T[j][1][1] );
 
                                                    for (int m1 = 0; m1 < 2*l1 + 1; ++m1) {
                                                       for (int mp1 = 0; mp1 < 2*lp1 + 1; ++mp1) {
@@ -575,7 +625,7 @@ double  WaveFunction::correlationintegral( int a ) {
                                                                      phase1 = pow(-1.0, mp1 - lp1 + M1);
                                                                      phase2 = pow(-1.0, mp2 - lp2 + M2);
 
-                                                                     Ic += amps[a][n1][l1][m1] * conj( amps[a][np1][lp1][mp1] ) * amps[a][n2][l2][m2] * conj( amps[a][np2][lp2][mp2] ) * temp * phase1 * G3 * phase2 * G4;
+                                                                     Ic += a(c,k,n1,l1,m1) * conj( a(c,k,np1,lp1,mp1) ) * a(c,k,n2,l2,m2) * conj( a(c,k,np2,lp2,mp2) ) * temp * phase1 * G3 * phase2 * G4;
                                                                   }
                                                                }
                                                             }
@@ -602,7 +652,7 @@ double  WaveFunction::correlationintegral( int a ) {
 }
 
 
-double  WaveFunction::correlationintegral_wb( const char c, int a ) {
+double  WaveFunction::correlationintegral_wb( const char c, int k ) {
    /*Calculates the correlation integral for the impact parameter b[i].*/
    
    //Holds the result:
@@ -616,38 +666,62 @@ double  WaveFunction::correlationintegral_wb( const char c, int a ) {
    double phase, phase1, phase2, G3, G4;
 
    //Calculate the fractional ionization N(t):
-   double N = 2.0 * ( 1.0 - indi_electron(a) );
+   double N_e = 2.0 * indi_electron(c,k);
+   
+   //Holds the ground state configuration information:
+   int N;
+   double *t;
+   int (*T)[2][3];
+   
+   //Pick the ground state configuration data on cnetre c:
+   switch (c) {
+      case 'T':
+         N = N_terms_T;
+         t = factors_T;
+         T = terms_T;
+         break;
+         
+      case 'P':
+         N = N_terms_P;
+         t = factors_P;
+         T = terms_P;
+         break;
+         
+      default:
+         std::cout << "Correlation integral error: Improper centre signifier" << std::endl;
+         return 0;
+   }
 
-   if ( N <= 1.0    ) {
+   if ( N <= 1.0 ) {
       return 0.0;
    }
    else {
 
       //Generate the integral table for the given impact parameter/N value:
-      generate_integral_table_wb(N);
-
+      generate_integral_table_wb(c,N_e);
+      
       //Sweep through the terms of the wave function:
-      for (int i = 0; i < N_terms; ++i) {
-         for (int j = 0; j < N_terms; ++j) {
+      for (int i = 0; i < N; ++i) {
+         for (int j = 0; j < N; ++j) {
 
             //perform the angular intergal of the first particle by sweeping through the possible Gaunt integrals:
-            for (int L1 = abs( terms[i][0][1] - terms[j][0][1] ); L1 <= terms[i][0][1] + terms[j][0][1]; ++L1 ) {
+            for (int L1 = abs( T[i][0][1] - T[j][0][1] ); L1 <= T[i][0][1] + T[j][0][1]; ++L1 ) {
                for (int M1 = -L1; M1 <= L1; ++M1) {
 
-                  if ( IsEven( terms[i][0][1] + terms[j][0][1] + L1) && ! (TriangleBroken( terms[i][0][1], terms[j][0][1], L1 ) ) && (terms[i][0][2] -terms[j][0][2] + M1 == 0) ) { //here
+                  if ( IsEven( T[i][0][1] + T[j][0][1] + L1) && ! (TriangleBroken( T[i][0][1], T[j][0][1], L1 ) ) && ( T[i][0][2] - T[j][0][2] + M1 == 0) ) {
 
-                     G1 = gaunt (terms[i][0][1], terms[i][0][2], terms[j][0][1], -terms[j][0][2], L1, M1);
+                     G1 = gaunt ( T[i][0][1], T[i][0][2], T[j][0][1], -T[j][0][2], L1, M1 );
 
                      //perform the angular intergal of the second particle by sweeping through the possible Gaunt integrals:
-                     for (int L2 = abs( terms[i][1][1] - terms[j][1][1] ); L2 <= terms[i][1][1] + terms[j][1][1]; ++L2 ) {
+                     for (int L2 = abs( T[i][1][1] - T[j][1][1] ); L2 <= T[i][1][1] + T[j][1][1]; ++L2 ) {
                         for (int M2 = -L2; M2 <= L2; ++M2) {
 
-                           if ( IsEven( terms[i][1][1] + terms[j][1][1] + L2) && ! (TriangleBroken( terms[i][1][1], terms[j][1][1], L2 ) ) && (terms[i][1][2] -terms[j][1][2] + M1 == 0) ) { //here
+                           if ( IsEven( T[i][1][1] + T[j][1][1] + L2) && ! (TriangleBroken( T[i][1][1], T[j][1][1], L2 ) ) && ( T[i][1][2] - T[j][1][2] + M1 == 0) ) {
 
-                              G2 =  gaunt (terms[i][1][1], terms[i][1][2], terms[j][1][1], -terms[j][1][2], L2, M2);
+                              G2 =  gaunt ( T[i][1][1], T[i][1][2], T[j][1][1], -T[j][1][2], L2, M2);
 
                               //calculate the pahse we neglected untill now:
-                              phase = pow(-1.0, terms[j][0][2] + terms[j][1][2] );
+                              phase = pow(-1.0, T[j][0][2] + T[j][1][2] );
 
                               //Perform the two sums from the P_lm functions:
                               for (int n1 = 1; n1 < MAXn; ++n1) {
@@ -658,9 +732,9 @@ double  WaveFunction::correlationintegral_wb( const char c, int a ) {
                                              for (int l2 = 0; l2 < n2; ++l2) {
                                                 for (int np2 = 1; np2 < MAXn; ++np2) {
                                                    for (int lp2 = 0; lp2 < np2; ++lp2) {
-                                                      //Store the value of the products of the complete integrals:
 
-                                                      double temp = phase * G1 * factors[i] * int_table_wb[n1][l1][np1][lp1][ terms[i][0][0] ][ terms[i][0][1] ][ terms[j][0][0] ][ terms[j][0][1] ] * G2 * factors[j] * int_table_wb[n2][l2][np2][lp2][ terms[i][1][0] ][ terms[i][1][1] ][ terms[j][1][0] ][ terms[j][1][1] ];
+                                                      //Store the value of the products of the complete integrals:
+                                                      double temp = phase * G1 * t[i] * table_wb( c, n1, l1, np1, lp1, T[i][0][0], T[i][0][1], T[j][0][0] , T[j][0][1] )  * G2 * t[j] * table_wb( c, n2, l2, np2, lp2, T[i][1][0], T[i][1][1], T[j][1][0] , T[j][1][1] );
 
                                                       for (int m1 = 0; m1 < 2*l1 + 1; ++m1) {
                                                          for (int mp1 = 0; mp1 < 2*lp1 + 1; ++mp1) {
@@ -679,7 +753,7 @@ double  WaveFunction::correlationintegral_wb( const char c, int a ) {
                                                                         phase1 = pow(-1.0, mp1 - lp1 + M1);
                                                                         phase2 = pow(-1.0, mp2 - lp2 + M2);
 
-                                                                        Ic += amps[a][n1][l1][m1] * conj( amps[a][np1][lp1][mp1] ) * amps[a][n2][l2][m2] * conj( amps[a][np2][lp2][mp2] ) * temp * phase1 * G3 * phase2 * G4;
+                                                                        Ic += a(c,k,n1,l1,m1) * conj( a(c,k,np1,lp1,mp1) ) * a(c,k,n2,l2,m2) * conj( a(c,k,np2,lp2,mp2) ) * temp * phase1 * G3 * phase2 * G4;
                                                                      }
                                                                   }
                                                                }
@@ -702,6 +776,6 @@ double  WaveFunction::correlationintegral_wb( const char c, int a ) {
             }
          }
       }
-      return   128.0 * ( N - 1 ) * PI * PI * real( Ic );
+      return   128.0 * ( N_e - 1 ) * PI * PI * real( Ic );
    }
 }
