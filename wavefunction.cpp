@@ -1,16 +1,18 @@
-/*
-T = 0
-P = 1
-D = 1
-G = 3
 
-T + D = 1
-P + D = 2
-T + G = 3
-P + G = 4
-*/
-
+#include <iostream>
+#include <fstream>
+#include <cstring>
+#include <string>
+#include <sstream>
+#include <algorithm>
+#include <math.h>
+#include <complex>
+#include <limits>
+#include <stdlib.h>
+#include "newtoncotes.hpp"
+#include "AngularMomentum.hpp"
 #include "wavefunction.hpp"
+
 
 const double PI = 3.141592653589793238462643383279502884197169399375105820974944592307816406286208998628034825342117067982;
 

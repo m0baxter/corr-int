@@ -3,18 +3,8 @@
 //heopmxdyn
 // LIMIT:     1534
 
-#include <iostream>
-#include <fstream>
-#include <cstring>
-#include <string>
-#include <sstream>
-#include <algorithm>
-#include <math.h>
+
 #include <complex>
-#include <limits>
-#include <stdlib.h>
-#include "newtoncotes.hpp"
-#include "AngularMomentum.hpp"
 
 
 #ifndef WAVEFUNCTION_HPP

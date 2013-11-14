@@ -4,8 +4,8 @@
 #include <string>
 #include <sstream>
 #include <time.h>
+#include "newtoncotes.hpp"
 #include "wavefunction.hpp"
-#include <complex>
 
 using namespace std;
 
