@@ -14,6 +14,6 @@ main : $(OBJ)
 main.o : main.cpp wavefunction.hpp makefile
 	        $(COMP) -c $(FLAGS) main.cpp
 clean:
-	rm  *.o main
+	rm  *.d *.o main
 	
 -include $(DPND)

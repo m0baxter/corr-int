@@ -3,7 +3,6 @@
 //heopmxdyn
 // LIMIT:     1534
 
-
 #include <complex>
 
 

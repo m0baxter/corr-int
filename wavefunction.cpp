@@ -1,14 +1,12 @@
 
 #include <iostream>
 #include <fstream>
-#include <cstring>
 #include <string>
+#include <vector>
+#include <complex>
 #include <sstream>
 #include <algorithm>
-#include <math.h>
-#include <complex>
-#include <limits>
-#include <stdlib.h>
+#include "StringManipulators.hpp"
 #include "newtoncotes.hpp"
 #include "AngularMomentum.hpp"
 #include "wavefunction.hpp"
@@ -88,14 +86,8 @@ void WaveFunction::readlattice() {
 
    for (int i = 1; i < LEN; ++i) {
 
-      //Read a line:
       getline(readfile,line);
-      std::stringstream ss;
-      ss << line;
-
-      //store:
-      ss >> r[i];
-
+      r[i] = str_to<double>(line);
    }
    readfile.close();
 }
@@ -167,27 +159,16 @@ void WaveFunction::readradial( const char centre, const char type ) {
          ss << n << l << ".txt";
          path += ss.str();
 
-         //convert string to char*:
-         char* pth = new char[path.size()+1];
-         strcpy(pth,path.c_str());
-
          //Open file:
-         std::ifstream readfile(pth);
-
-         delete[] pth;
+         std::ifstream readfile(path.c_str());
 
          //Give R_nl(0) some value (doesn't really matter what it is as long as its not zero):
          Rad[c][t][n][l][0] = 1.0;
 
          for (int i = 1; i < LEN; ++i) {
-            //get a line
+
             getline(readfile,line);
-            std::stringstream ssline;
-            ssline << line;
-
-            //Store:
-            ssline >> Rad[c][t][n][l][i];
-
+            Rad[c][t][n][l][i] = str_to<double>(line);
          }
          readfile.close();
       }
@@ -200,8 +181,6 @@ void WaveFunction::readamplitudes( const char centre, int energy ) {
 
    std::string path, line;
    std::stringstream ss;
-   char* tok1;
-   char* tok2;
    
    int c = TP_toint(centre);
    
@@ -230,67 +209,30 @@ void WaveFunction::readamplitudes( const char centre, int energy ) {
    ss << energy << ".txt";
    path += ss.str();
 
-   //convert path to c_string.
-   char* pth = new char[path.size()+1];
-   strcpy(pth,path.c_str());
-
    //open file.
-   std::ifstream readfile(pth);
-
-   delete[] pth;
+   std::ifstream readfile(path.c_str());
 
    for (int i = 0; i < 30; ++i) {
 
       //read impact parameter line.
       getline(readfile,line);
-
-      //convert line to c_string.
-      char* cstr_line = new char[line.size()+1];
-      strcpy(cstr_line,line.c_str());
-
-      //extract token containing impact parameter.
-      strtok(cstr_line, "=");
-      std::stringstream ss1;
-      ss1 << strtok(NULL, " ");
-      ss1 >> b[i];
+      std::vector<std::string> tokens = split(line,"=");
+      b[i] = str_to<float>(tokens[1]);
 
       //store value in b.
       for (int n = 1; n < 5; ++n) {
          for (int l = 0; l < n; ++l) {
             for (int m = 0; m < 2*l + 1; ++m) {
 
-               //get next line.
                getline(readfile,line);
-
-               //convert line to c_string.
-               cstr_line = new char[line.size()+1];
-               strcpy(cstr_line,line.c_str());
-
-               //get first token tok1.
-               tok1 = strtok(cstr_line, "\t");
-
-               //convert it to a double:
-               std:: stringstream real;
-               real << tok1;
-               double realpart;
-               real >> realpart;
-
-               //get second token tok2.
-               tok2 = strtok(NULL, "\t");
-
-               //convert it to a double:
-               std:: stringstream im;
-               im << tok2;
-               double impart;
-               im >> impart;
-
-               //convert to complex(tok1,tok2) and store in amps[i][n][l][m].
+               tokens = split(line,"\t");
+               double realpart = str_to<double>(tokens[0]);
+               double impart   = str_to<double>(tokens[1]);
                amps[c][i][n][l][m] = std::complex<double>( realpart, impart );
 
             }
          }
       }
-      delete[] cstr_line;
    }
    readfile.close();
 }
@@ -301,7 +243,6 @@ void WaveFunction::readinput( const char centre, const char* inputpath ) {
 
    std::ifstream readfile ( inputpath );
    std::string line;
-   char* tok;
    int N;
 
    //Read the number of terms:
@@ -332,34 +273,22 @@ void WaveFunction::readinput( const char centre, const char* inputpath ) {
 
       //get next line:
       getline(readfile,line);
-
-      //convert line to c_string.
-      char* cstr_line = new char[line.size()+1];
-      strcpy(cstr_line,line.c_str());
-
-      //get first token tok1.
-      tok = strtok(cstr_line, " ");
-
-      //store prefactor:
-      std::stringstream ss1;
-      ss1 << tok;
-      ss1 >> temp_f[i];
+      std::vector<std::string> tokens = split(line," ");
+      
+      //Store prefactor:
+      temp_f[i] = str_to<double>(tokens[0]);
 
       //store the quantum numbers
       for (int j = 0; j < 6; ++j) {
-
-         //get next token.
-         tok = strtok(NULL, " \n");
-
+      
          //Determine which particle. store numbers:
          if (j < 3) {
-            temp_t[i][0][ j % 3 ] = atoi(tok);
+            temp_t[i][0][ j % 3 ] = str_to<int>(tokens[j+1]);
          }
          else {
-            temp_t[i][1][ j % 3 ] = atoi(tok);
+            temp_t[i][1][ j % 3 ] = str_to<int>(tokens[j+1]);
          }
       }
-      delete[] cstr_line;
    }
    
    switch (centre) {
