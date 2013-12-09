@@ -30,7 +30,7 @@ int main() {
 
 	std::stringstream ss;
 
-	std::string path = "/home/baxter/Documents/test_std_E";
+	std::string path = "/home/baxter/Documents/TPHL_E";
 	ss << E << ".txt";
 	path += ss.str();
 
@@ -42,7 +42,7 @@ int main() {
 	
 	//Input paths:
 	string input_T = "/home/baxter/Documents/Observable/Input/wfn/MCHF_1s-4d(all).txt";
-	string input_P = "/home/baxter/Documents/Observable/Input/wfn/MCHF_1s-4d(all).txt"; 
+	string input_P = "/home/baxter/Documents/Observable/Input/wfn/hneg/Hneg_1s-4f(all).txt"; 
 
 	//Create Wave function:
 	WaveFunction MCHF_1s4d ( input_T.c_str(), input_P.c_str() , E , true );
@@ -51,7 +51,7 @@ int main() {
 
 	cout << "setup done (s): " << difftime(setup,begin) << endl;
 
-	for (int j = 0; j < 1; ++j) {
+	for (int j = 0; j < 30; ++j) {
 
 		time(&t1);
 
@@ -63,6 +63,12 @@ int main() {
 		//Calculate IEM p:
 		double p_T = MCHF_1s4d.indi_electron( 'T', j );
 		double p_P = MCHF_1s4d.indi_electron( 'P', j );
+		
+		//Heitler-London TP integral:
+		if ( p_T + p_P > .5 ) {
+		
+		   Ic_TP = (2*p_P*p_T)/( p_T + p_P - 0.5);
+		}
 
 		//Calculate IEM probabilities:
 		double ie_pTT = p_T * p_T; 
@@ -84,14 +90,11 @@ int main() {
 		          << Ic_PP                   << " " << Ic_TP  << " " << ie_pTT << " " << ie_pTI << " "
 		          << ie_pII                  << " " << ie_pTP << " " << ie_pIP << " " << ie_pPP << " "
 		          << p_TT                    << " " << p_TI   << " " << p_II   << " " << p_TP   << " "
-		          << p_PI                    << " " << p_PP <<"\n";
+		          << p_PI                    << " " << p_PP << endl;
 
 		time(&t2);
 
 		cout << "done #" << j + 1 << " (s): " << difftime(t2,t1) << endl;
-		/*cout << MCHF_1s4d.get_impact(j) << "     " << p << "     " <<  Ic << "     " << ie_p0 <<
-		 "     " << ie_p1 << "     " << ie_p2 << "     " << p0 << "     " << p1 << "     " << p2 <<
-		 "\n\n"; */
 	}
 
 	writefile.close();

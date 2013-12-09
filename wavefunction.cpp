@@ -6,6 +6,7 @@
 #include <complex>
 #include <sstream>
 #include <algorithm>
+#include <memory>
 #include "StringManipulators.hpp"
 #include "newtoncotes.hpp"
 #include "AngularMomentum.hpp"
@@ -58,6 +59,12 @@ int WaveFunction::DG_toint( const char c ) {
 }
 
 
+int WaveFunction::charge( const char c ) {
+
+   return ( (c + 0) - 76 )/4;
+}
+
+
 float WaveFunction::get_impact( int i) {
 
    return b[i];
@@ -71,13 +78,15 @@ void WaveFunction::readlattice() {
    const char* path;
 
    //Open file to be read:
+     path = "/home/baxter/Documents/Observable/Input/radial/heopmxdyn/lattice.txt";
+   //path = "/home/baxter/Documents/Observable/Input/radial/opm/lattice.txt";
    //path = "/home/baxter/Documents/Observable/Input/radial/silverman_1s1s/lattice.txt";
    //path = "/home/baxter/Documents/Observable/Input/radial/silverman full/lattice.txt";
    //path = "/home/baxter/Documents/Observable/Input/radial/MCHF_1s-2p/lattice.txt";
    //path = "/home/baxter/Documents/Observable/Input/radial/MCHF_1s-4s/lattice.txt";
    //path = "/home/baxter/Documents/Observable/Input/radial/MCHF_1s-4s(all)/lattice.txt";
    //path = "/home/baxter/Documents/Observable/Input/radial/MCHF_1s-4d/lattice.txt";
-     path = "/home/baxter/Documents/Observable/Input/radial/MCHF_1s-4d(all)/lattice.txt";
+   //path = "/home/baxter/Documents/Observable/Input/radial/MCHF_1s-4d(all)/lattice.txt";
    //path = "/home/baxter/Documents/Observable/Input/radial/MCHF_1s-4f/lattice.txt";
 
    std::ifstream readfile(path);
@@ -107,24 +116,29 @@ void WaveFunction::readradial( const char centre, const char type ) {
       
          switch (centre + type) {
             case 'T' + 'D': //target dynamic
+               //path = "/home/baxter/Documents/Observable/Input/radial/heopmxdyn/R_";
+               //path = "/home/baxter/Documents/Observable/Input/radial/opm/R_";
                //path = "/home/baxter/Documents/Observable/Input/radial/silverman_1s1s/R_";
                //path = "/home/baxter/Documents/Observable/Input/radial/silverman full/R_";
                //path = "/home/baxter/Documents/Observable/Input/radial/MCHF_1s-2p/R_";
                //path = "/home/baxter/Documents/Observable/Input/radial/MCHF_1s-4s/R_";
                //path = "/home/baxter/Documents/Observable/Input/radial/MCHF_1s-4s(all)/R_";
                //path = "/home/baxter/Documents/Observable/Input/radial/MCHF_1s-4d/R_";
-                 path = "/home/baxter/Documents/Observable/Input/radial/MCHF_1s-4d(all)/R_";
+               //path = "/home/baxter/Documents/Observable/Input/radial/MCHF_1s-4d(all)/R_";
                //path = "/home/baxter/Documents/Observable/Input/radial/MCHF_1s-4f/R_";
+                 path = "/home/baxter/Documents/Observable/Input/radial/opmgrid/R_";
                break;
                
             case 'P' + 'D': //projectile dynamic
+                 path = "/home/baxter/Documents/Observable/Input/radial/heopmxdyn/R_";
+               //path = "/home/baxter/Documents/Observable/Input/radial/opm/R_";
                //path = "/home/baxter/Documents/Observable/Input/radial/silverman_1s1s/R_";
                //path = "/home/baxter/Documents/Observable/Input/radial/silverman full/R_";
                //path = "/home/baxter/Documents/Observable/Input/radial/MCHF_1s-2p/R_";
                //path = "/home/baxter/Documents/Observable/Input/radial/MCHF_1s-4s/R_";
                //path = "/home/baxter/Documents/Observable/Input/radial/MCHF_1s-4s(all)/R_";
                //path = "/home/baxter/Documents/Observable/Input/radial/MCHF_1s-4d/R_";
-                 path = "/home/baxter/Documents/Observable/Input/radial/MCHF_1s-4d(all)/R_";
+               //path = "/home/baxter/Documents/Observable/Input/radial/MCHF_1s-4d(all)/R_";
                //path = "/home/baxter/Documents/Observable/Input/radial/MCHF_1s-4f/R_";
                break;
                
@@ -135,19 +149,22 @@ void WaveFunction::readradial( const char centre, const char type ) {
                //path = "/home/baxter/Documents/Observable/Input/radial/Ground state/MCHF_1s-4s/R_";
                //path = "/home/baxter/Documents/Observable/Input/radial/Ground state/MCHF_1s-4s(all)/R_";
                //path = "/home/baxter/Documents/Observable/Input/radial/Ground state/MCHF_1s-4d/R_";
-                 path = "/home/baxter/Documents/Observable/Input/radial/Ground state/MCHF_1s-4d(all)/R_";
+               //path = "/home/baxter/Documents/Observable/Input/radial/Ground state/MCHF_1s-4d(all)/R_";
                //path = "/home/baxter/Documents/Observable/Input/radial/Ground state/MCHF_1s-4f/R_";
+                 path = "/home/baxter/Documents/Observable/Input/radial/Ground state/opmgrid/R_";
                break;
                
             case 'P' + 'G': //projectile ground state
+                 path = "/home/baxter/Documents/Observable/Input/radial/heopmxdyn/R_";
                //path = "/home/baxter/Documents/Observable/Input/radial/Ground state/silverman_1s1sp/R_";
                //path = "/home/baxter/Documents/Observable/Input/radial/Ground state/silverman_full/R_";
                //path = "/home/baxter/Documents/Observable/Input/radial/Ground state/MCHF_1s-2p/R_";
                //path = "/home/baxter/Documents/Observable/Input/radial/Ground state/MCHF_1s-4s/R_";
                //path = "/home/baxter/Documents/Observable/Input/radial/Ground state/MCHF_1s-4s(all)/R_";
                //path = "/home/baxter/Documents/Observable/Input/radial/Ground state/MCHF_1s-4d/R_";
-                 path = "/home/baxter/Documents/Observable/Input/radial/Ground state/MCHF_1s-4d(all)/R_";
+               //path = "/home/baxter/Documents/Observable/Input/radial/Ground state/MCHF_1s-4d(all)/R_";
                //path = "/home/baxter/Documents/Observable/Input/radial/Ground state/MCHF_1s-4f/R_";
+               //path = "/home/baxter/Documents/Observable/Input/radial/Ground state/hneg/R_";
                break;
                
             default:
@@ -190,7 +207,8 @@ void WaveFunction::readamplitudes( const char centre, int energy ) {
          //path = "/home/baxter/Documents/Observable/Input/amplitudes/old/E";
          //path = "/home/baxter/Documents/Observable/Input/amplitudes/OPM/E";
          //path = "/home/baxter/Documents/Observable/Input/amplitudes/MCHF_1s4d/E";
-           path = "/home/baxter/Documents/Observable/Input/amplitudes/MCHF_1s4d(all)/E";
+         //path = "/home/baxter/Documents/Observable/Input/amplitudes/MCHF_1s4d(all)/E";
+           path = "/home/baxter/Documents/Observable/Input/amplitudes/phe/target/E";
          break;
 
       case 'P':
@@ -198,7 +216,8 @@ void WaveFunction::readamplitudes( const char centre, int energy ) {
          //path = "/home/baxter/Documents/Observable/Input/amplitudes/old/E";
          //std::string path = "/home/baxter/Documents/Observable/Input/amplitudes/OPM/E";
          //std::string path = "/home/baxter/Documents/Observable/Input/amplitudes/MCHF_1s4d/E";
-         //std::string path = "/home/baxter/Documents/Observable/Input/amplitudes/MCHF_1s4d(all)/E";   
+         //std::string path = "/home/baxter/Documents/Observable/Input/amplitudes/MCHF_1s4d(all)/E";
+           path = "/home/baxter/Documents/Observable/Input/amplitudes/phe/projectile/E";   
          break;
          
       default:
@@ -330,6 +349,7 @@ double WaveFunction::R( const char centre, const char type, int n, int l, double
    return Rad[TP_toint(centre)][DG_toint(type)][n][l][r_index(x)];
 }
 
+
 std::complex<double> WaveFunction::a( const char centre, int i, int n, int l, int m ) {
    /*Return the coefficient a_centre[n][l][m].*/
    
@@ -337,10 +357,10 @@ std::complex<double> WaveFunction::a( const char centre, int i, int n, int l, in
 }
 
 
-double WaveFunction::Hep1( double x ) {
+double WaveFunction::Hlike( int z, double x ) {
    /*Returns the of the He 1+ ground state at the point x.*/
 
-   return sqrt( 32.0 ) * exp( - 2.0 * x ) ;
+   return sqrt(4.0*z*z*z) * exp(-z*x) ;
 }
 
 
@@ -361,10 +381,10 @@ double WaveFunction::indi_electron( const char centre, int i ) {
 }
 
 
-double* WaveFunction::integrand(const char c, int n1, int l1, int n2, int l2 , int s_n_1 , int s_l_1, int s_n_2 , int s_l_2) {
+std::unique_ptr<double[]> WaveFunction::integrand(const char c, int n1, int l1, int n2, int l2 , int s_n_1 , int s_l_1, int s_n_2 , int s_l_2) {
    /*Generates the values of the integrand for the given values.*/
 
-   static double result[LIMIT];
+   std::unique_ptr<double[]> result(new double[LIMIT]);
 
    result[0] = 0.0;
 
@@ -377,16 +397,17 @@ double* WaveFunction::integrand(const char c, int n1, int l1, int n2, int l2 , i
 }
 
 
-double* WaveFunction::integrand_wb( const char c, double N, int n1, int l1, int n2, int l2 , int s_n_1 , int s_l_1, int s_n_2 , int s_l_2) {
+std::unique_ptr<double[]> WaveFunction::integrand_wb( const char c, double N, int n1, int l1, int n2, int l2 , int s_n_1 , int s_l_1, int s_n_2 , int s_l_2) {
    /*Generates the values of the WB integrand for the given values.*/
 
-   static double result[LIMIT];
+   std::unique_ptr<double[]> result(new double[LIMIT]);
+   int z = charge(c);
 
    result[0] = 0.0;
 
    for (int i = 1; i < LIMIT; ++i) {
 
-      result[i] = r[i]*r[i] * R(c,'G', s_n_1 , s_l_1, r[i]) * R(c,'G', s_n_2 , s_l_2, r[i]) * ( R(c,'D',n1,l1,r[i])  * R(c,'D',n2,l2,r[i]) / ( (2 - N) * Hep1(r[i])*Hep1(r[i]) + 2.0 * (N - 1) * R(c,'D',1,0,r[i]) * R(c,'D',1,0,r[i]) ) );
+      result[i] = r[i]*r[i] * R(c,'G', s_n_1 , s_l_1, r[i]) * R(c,'G', s_n_2 , s_l_2, r[i]) * ( R(c,'D',n1,l1,r[i])  * R(c,'D',n2,l2,r[i]) / ( (2 - N) * Hlike(z,r[i])*Hlike(z,r[i]) + 2.0 * (N - 1) * R(c,'D',1,0,r[i]) * R(c,'D',1,0,r[i]) ) );
    }
 
    return result;
@@ -406,12 +427,14 @@ void WaveFunction::generate_integral_table( const char centre ) {
                   for (int l1_gs = 0; l1_gs < n1_gs; ++l1_gs) {
                      for (int n2_gs = n1_gs; n2_gs < 5; ++n2_gs) {
                         for (int l2_gs = 0; l2_gs < n2_gs; ++l2_gs) {
+                        
+                           std::unique_ptr<double[]> temp = integrand( centre, n1, l1, n2, l2, n1_gs, l1_gs, n2_gs, l2_gs);
 
-                           int_table[c][n1][l1][n2][l2][n1_gs][l1_gs][n2_gs][l2_gs] = newtoncotes(r,integrand( centre, n1, l1, n2, l2, n1_gs, l1_gs, n2_gs, l2_gs), LIMIT);
+                           int_table[c][n1][l1][n2][l2][n1_gs][l1_gs][n2_gs][l2_gs] = newtoncotes(r,temp.get(), LIMIT);
                            int_table[c][n2][l2][n1][l1][n1_gs][l1_gs][n2_gs][l2_gs] = int_table[c][n1][l1][n2][l2][n1_gs][l1_gs][n2_gs][l2_gs];
                            int_table[c][n1][l1][n2][l2][n2_gs][l2_gs][n1_gs][l1_gs] = int_table[c][n1][l1][n2][l2][n1_gs][l1_gs][n2_gs][l2_gs];
                            int_table[c][n2][l2][n1][l1][n2_gs][l2_gs][n1_gs][l1_gs] = int_table[c][n1][l1][n2][l2][n1_gs][l1_gs][n2_gs][l2_gs];
-
+                           
                         }
                      }
                   }
@@ -436,11 +459,14 @@ void WaveFunction::generate_integral_table_wb( const char centre, double N  ) {
                   for (int l1_gs = 0; l1_gs < n1_gs; ++l1_gs) {
                      for (int n2_gs = n1_gs; n2_gs < 5; ++n2_gs) {
                         for (int l2_gs = 0; l2_gs < n2_gs; ++l2_gs) {
+                        
+                           std::unique_ptr<double[]> temp = integrand( centre, n1, l1, n2, l2, n1_gs, l1_gs, n2_gs, l2_gs);
 
-                           int_table_wb[c][n1][l1][n2][l2][n1_gs][l1_gs][n2_gs][l2_gs] = newtoncotes(r,integrand_wb( centre, N, n1, l1, n2, l2, n1_gs, l1_gs, n2_gs, l2_gs), LIMIT);
+                           int_table_wb[c][n1][l1][n2][l2][n1_gs][l1_gs][n2_gs][l2_gs] = newtoncotes(r,temp.get(), LIMIT);
                            int_table_wb[c][n2][l2][n1][l1][n1_gs][l1_gs][n2_gs][l2_gs] = int_table_wb[c][n1][l1][n2][l2][n1_gs][l1_gs][n2_gs][l2_gs];
                            int_table_wb[c][n1][l1][n2][l2][n2_gs][l2_gs][n1_gs][l1_gs] = int_table_wb[c][n1][l1][n2][l2][n1_gs][l1_gs][n2_gs][l2_gs];
                            int_table_wb[c][n2][l2][n1][l1][n2_gs][l2_gs][n1_gs][l1_gs] = int_table_wb[c][n1][l1][n2][l2][n1_gs][l1_gs][n2_gs][l2_gs];
+                           
                         }
                      }
                   }
@@ -623,7 +649,7 @@ double  WaveFunction::correlationintegral_wb( const char c, int k ) {
          return 0;
    }
 
-   if ( N <= 1.0 ) {
+   if ( N_e <= 1.0 ) {
       return 0.0;
    }
    else {

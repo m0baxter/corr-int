@@ -1,6 +1,6 @@
 
 COMP = g++
-FLAGS = -Wall -pedantic -O3 -march=native
+FLAGS = -std=c++11 -Wall -pedantic -O3 -march=native
 SRC = $(wildcard *.cpp)
 OBJ = $(SRC:.cpp=.o)
 DPND = $(SRC:.cpp=.d)

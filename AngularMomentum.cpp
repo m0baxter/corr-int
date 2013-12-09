@@ -11,7 +11,8 @@ int factorial(int n) {
 	if ( n <= 1 ) {
 
 		return 1;
-	} else {
+	}
+	else {
 
 		int fact = 1;
 
@@ -25,22 +26,7 @@ int factorial(int n) {
 bool TriangleBroken ( int l1, int l2, int l3 ) {
 	/*Tests whether the triangle condition |l1 - l2| <= l3 <= l1 - l2 is broken. If it does not it returns True, else False*/
 
-	if ( abs( l1 - l2 ) > l3 || l1 + l2 < l3 ) {
-
-		return true;
-	}
-	else if ( abs( l2 - l3 ) > l1 || l2 + l3 < l1 ) {
-
-		return true;
-	}
-	else if ( abs( l3 - l1 ) > l2 || l3 + l1 < l2 ) {
-
-		return true;
-	}
-	else {
-
-		return false;
-	}
+   return ( abs( l1 - l2 ) > l3 ) or ( l1 + l2 < l3 );
 }
 
 
