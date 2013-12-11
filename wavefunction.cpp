@@ -130,7 +130,7 @@ void WaveFunction::readradial( const char centre, const char type ) {
                break;
                
             case 'P' + 'D': //projectile dynamic
-                 path = "/home/baxter/Documents/Observable/Input/radial/heopmxdyn/R_";
+               //path = "/home/baxter/Documents/Observable/Input/radial/heopmxdyn/R_";
                //path = "/home/baxter/Documents/Observable/Input/radial/opm/R_";
                //path = "/home/baxter/Documents/Observable/Input/radial/silverman_1s1s/R_";
                //path = "/home/baxter/Documents/Observable/Input/radial/silverman full/R_";
@@ -140,6 +140,7 @@ void WaveFunction::readradial( const char centre, const char type ) {
                //path = "/home/baxter/Documents/Observable/Input/radial/MCHF_1s-4d/R_";
                //path = "/home/baxter/Documents/Observable/Input/radial/MCHF_1s-4d(all)/R_";
                //path = "/home/baxter/Documents/Observable/Input/radial/MCHF_1s-4f/R_";
+                 path = "/home/baxter/Documents/Observable/Input/radial/Ground state/hneg/R_";
                break;
                
             case 'T' + 'G': //target ground state
@@ -155,7 +156,7 @@ void WaveFunction::readradial( const char centre, const char type ) {
                break;
                
             case 'P' + 'G': //projectile ground state
-                 path = "/home/baxter/Documents/Observable/Input/radial/heopmxdyn/R_";
+               //path = "/home/baxter/Documents/Observable/Input/radial/heopmxdyn/R_";
                //path = "/home/baxter/Documents/Observable/Input/radial/Ground state/silverman_1s1sp/R_";
                //path = "/home/baxter/Documents/Observable/Input/radial/Ground state/silverman_full/R_";
                //path = "/home/baxter/Documents/Observable/Input/radial/Ground state/MCHF_1s-2p/R_";
@@ -164,7 +165,7 @@ void WaveFunction::readradial( const char centre, const char type ) {
                //path = "/home/baxter/Documents/Observable/Input/radial/Ground state/MCHF_1s-4d/R_";
                //path = "/home/baxter/Documents/Observable/Input/radial/Ground state/MCHF_1s-4d(all)/R_";
                //path = "/home/baxter/Documents/Observable/Input/radial/Ground state/MCHF_1s-4f/R_";
-               //path = "/home/baxter/Documents/Observable/Input/radial/Ground state/hneg/R_";
+                 path = "/home/baxter/Documents/Observable/Input/radial/Ground state/hneg/R_";
                break;
                
             default:
@@ -460,7 +461,7 @@ void WaveFunction::generate_integral_table_wb( const char centre, double N  ) {
                      for (int n2_gs = n1_gs; n2_gs < 5; ++n2_gs) {
                         for (int l2_gs = 0; l2_gs < n2_gs; ++l2_gs) {
                         
-                           std::unique_ptr<double[]> temp = integrand( centre, n1, l1, n2, l2, n1_gs, l1_gs, n2_gs, l2_gs);
+                           std::unique_ptr<double[]> temp = integrand_wb( centre, N, n1, l1, n2, l2, n1_gs, l1_gs, n2_gs, l2_gs);
 
                            int_table_wb[c][n1][l1][n2][l2][n1_gs][l1_gs][n2_gs][l2_gs] = newtoncotes(r,temp.get(), LIMIT);
                            int_table_wb[c][n2][l2][n1][l1][n1_gs][l1_gs][n2_gs][l2_gs] = int_table_wb[c][n1][l1][n2][l2][n1_gs][l1_gs][n2_gs][l2_gs];

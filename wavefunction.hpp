@@ -15,8 +15,9 @@ class WaveFunction {
    public:
       //Functions:
       WaveFunction( const char*, const char* , int, bool );
+      WaveFunction()                  = delete;  //no default
       WaveFunction( WaveFunction & )  = delete;  //no copy
-      WaveFunction( WaveFunction && ) = delete;  // no move
+      WaveFunction( WaveFunction && ) = delete;  //no move
       ~WaveFunction();
       float get_impact( int );
       double indi_electron( const char, int );

@@ -24,14 +24,16 @@ int factorial(int n) {
 }
 
 bool TriangleBroken ( int l1, int l2, int l3 ) {
-	/*Tests whether the triangle condition |l1 - l2| <= l3 <= l1 - l2 is broken. If it does not it returns True, else False*/
+	/*Tests whether the triangle condition |l1 - l2| <= l3 <= l1 - l2 is broken.
+	If it does not it returns True, else False*/
 
    return ( abs( l1 - l2 ) > l3 ) or ( l1 + l2 < l3 );
 }
 
 
 bool IsEven( int i ) {
-	/*Checks whether the integer i is even. Does not check all the conditions, most will be met from the contex.*/
+	/*Checks whether the integer i is even. Does not check all the conditions,
+	most will be met from the contex.*/
 
 	return (i % 2) == 0;
 }

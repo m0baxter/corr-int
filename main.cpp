@@ -25,6 +25,7 @@ int main() {
 
 	cout << "Enter impact energy:  " << endl;
 	cin >> E;
+	cout << endl;
 
 	time(&begin);
 
@@ -36,7 +37,7 @@ int main() {
 
 	//Open file to be written to:
 	ofstream writefile( path.c_str() );
-	writefile << "b p_T p_P Ic_TT Ic_PP Ic_TP ie_pTT ie_pTI ie_pII ie_pTP ie_pIP ie_pPP p_TT p_TI p_II p_TP p_PI p_PP\n";
+	writefile << "b p_T p_P Ic_TT Ic_PP Ic_TP ie_pTT ie_pTI ie_pII ie_pTP ie_pIP ie_pPP p_TT p_TI p_II p_TP p_PI p_PP" << endl;
 
 	cout << "Starting E = " << E << " keV" << endl;
 	
