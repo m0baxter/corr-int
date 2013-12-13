@@ -15,7 +15,7 @@
 
 const double PI = 3.141592653589793238462643383279502884197169399375105820974944592307816406286208998628034825342117067982;
 
-WaveFunction::WaveFunction( const char* inputpath_T, const char* inputpath_P, int energy, bool wb ) {
+WaveFunction::WaveFunction( int energy, bool wb ) {
    /*Constructor for objects of class WaveFunction.*/
 
    //initialize tables:
@@ -26,8 +26,8 @@ WaveFunction::WaveFunction( const char* inputpath_T, const char* inputpath_P, in
    readradial('P', 'G');
    readamplitudes( 'T', energy );
    readamplitudes( 'P', energy );
-   readinput( 'T', inputpath_T );
-   readinput( 'P', inputpath_P );
+   readinput( 'T' );
+   readinput( 'P' );
 
    //Calculate table of integrals
    if (!wb){
@@ -74,28 +74,16 @@ float WaveFunction::get_impact( int i) {
 void WaveFunction::readlattice() {
    /*Reads/stores the file containing the lattice points.*/
 
-   std::string line;
-   const char* path;
-
    //Open file to be read:
-     path = "/home/baxter/Documents/Observable/Input/radial/heopmxdyn/lattice.txt";
-   //path = "/home/baxter/Documents/Observable/Input/radial/opm/lattice.txt";
-   //path = "/home/baxter/Documents/Observable/Input/radial/silverman_1s1s/lattice.txt";
-   //path = "/home/baxter/Documents/Observable/Input/radial/silverman full/lattice.txt";
-   //path = "/home/baxter/Documents/Observable/Input/radial/MCHF_1s-2p/lattice.txt";
-   //path = "/home/baxter/Documents/Observable/Input/radial/MCHF_1s-4s/lattice.txt";
-   //path = "/home/baxter/Documents/Observable/Input/radial/MCHF_1s-4s(all)/lattice.txt";
-   //path = "/home/baxter/Documents/Observable/Input/radial/MCHF_1s-4d/lattice.txt";
-   //path = "/home/baxter/Documents/Observable/Input/radial/MCHF_1s-4d(all)/lattice.txt";
-   //path = "/home/baxter/Documents/Observable/Input/radial/MCHF_1s-4f/lattice.txt";
-
-   std::ifstream readfile(path);
+   std::ifstream readfile("./input/radial/lattice.txt");
 
    r[0] = 0.0;
 
    for (int i = 1; i < LEN; ++i) {
-
+   
+      std::string line;
       getline(readfile,line);
+      
       r[i] = str_to<double>(line);
    }
    readfile.close();
@@ -110,75 +98,38 @@ void WaveFunction::readradial( const char centre, const char type ) {
    
    int c = TP_toint(centre);
    int t = DG_toint(type);
+   
+   switch (centre + type) {
+      case 'T' + 'D': //target dynamic
+         path = "./input/radial/dynamic/target/R_";
+         break;
+               
+      case 'P' + 'D': //projectile dynamic
+         path = "./input/radial/dynamic/projectile/R_";
+         break;
+               
+      case 'T' + 'G': //target ground state
+         path = "./input/radial/gs/target/R_";
+         break;
+               
+      case 'P' + 'G': //projectile ground state
+         path = "./input/radial/gs/projectile/R_";
+         break;
+               
+      default:
+         std::cout << "readradial error: Improper centre/type signifier" << std::endl;
+         return;
+   }
 
    for (int n = 1; n < 5; ++n) {
       for (int l = 0; l < n; ++l) {
-      
-         switch (centre + type) {
-            case 'T' + 'D': //target dynamic
-               //path = "/home/baxter/Documents/Observable/Input/radial/heopmxdyn/R_";
-               //path = "/home/baxter/Documents/Observable/Input/radial/opm/R_";
-               //path = "/home/baxter/Documents/Observable/Input/radial/silverman_1s1s/R_";
-               //path = "/home/baxter/Documents/Observable/Input/radial/silverman full/R_";
-               //path = "/home/baxter/Documents/Observable/Input/radial/MCHF_1s-2p/R_";
-               //path = "/home/baxter/Documents/Observable/Input/radial/MCHF_1s-4s/R_";
-               //path = "/home/baxter/Documents/Observable/Input/radial/MCHF_1s-4s(all)/R_";
-               //path = "/home/baxter/Documents/Observable/Input/radial/MCHF_1s-4d/R_";
-               //path = "/home/baxter/Documents/Observable/Input/radial/MCHF_1s-4d(all)/R_";
-               //path = "/home/baxter/Documents/Observable/Input/radial/MCHF_1s-4f/R_";
-                 path = "/home/baxter/Documents/Observable/Input/radial/opmgrid/R_";
-               break;
-               
-            case 'P' + 'D': //projectile dynamic
-               //path = "/home/baxter/Documents/Observable/Input/radial/heopmxdyn/R_";
-               //path = "/home/baxter/Documents/Observable/Input/radial/opm/R_";
-               //path = "/home/baxter/Documents/Observable/Input/radial/silverman_1s1s/R_";
-               //path = "/home/baxter/Documents/Observable/Input/radial/silverman full/R_";
-               //path = "/home/baxter/Documents/Observable/Input/radial/MCHF_1s-2p/R_";
-               //path = "/home/baxter/Documents/Observable/Input/radial/MCHF_1s-4s/R_";
-               //path = "/home/baxter/Documents/Observable/Input/radial/MCHF_1s-4s(all)/R_";
-               //path = "/home/baxter/Documents/Observable/Input/radial/MCHF_1s-4d/R_";
-               //path = "/home/baxter/Documents/Observable/Input/radial/MCHF_1s-4d(all)/R_";
-               //path = "/home/baxter/Documents/Observable/Input/radial/MCHF_1s-4f/R_";
-                 path = "/home/baxter/Documents/Observable/Input/radial/Ground state/hneg/R_";
-               break;
-               
-            case 'T' + 'G': //target ground state
-               //path = "/home/baxter/Documents/Observable/Input/radial/Ground state/silverman_1s1sp/R_";
-               //path = "/home/baxter/Documents/Observable/Input/radial/Ground state/silverman_full/R_";
-               //path = "/home/baxter/Documents/Observable/Input/radial/Ground state/MCHF_1s-2p/R_";
-               //path = "/home/baxter/Documents/Observable/Input/radial/Ground state/MCHF_1s-4s/R_";
-               //path = "/home/baxter/Documents/Observable/Input/radial/Ground state/MCHF_1s-4s(all)/R_";
-               //path = "/home/baxter/Documents/Observable/Input/radial/Ground state/MCHF_1s-4d/R_";
-               //path = "/home/baxter/Documents/Observable/Input/radial/Ground state/MCHF_1s-4d(all)/R_";
-               //path = "/home/baxter/Documents/Observable/Input/radial/Ground state/MCHF_1s-4f/R_";
-                 path = "/home/baxter/Documents/Observable/Input/radial/Ground state/opmgrid/R_";
-               break;
-               
-            case 'P' + 'G': //projectile ground state
-               //path = "/home/baxter/Documents/Observable/Input/radial/heopmxdyn/R_";
-               //path = "/home/baxter/Documents/Observable/Input/radial/Ground state/silverman_1s1sp/R_";
-               //path = "/home/baxter/Documents/Observable/Input/radial/Ground state/silverman_full/R_";
-               //path = "/home/baxter/Documents/Observable/Input/radial/Ground state/MCHF_1s-2p/R_";
-               //path = "/home/baxter/Documents/Observable/Input/radial/Ground state/MCHF_1s-4s/R_";
-               //path = "/home/baxter/Documents/Observable/Input/radial/Ground state/MCHF_1s-4s(all)/R_";
-               //path = "/home/baxter/Documents/Observable/Input/radial/Ground state/MCHF_1s-4d/R_";
-               //path = "/home/baxter/Documents/Observable/Input/radial/Ground state/MCHF_1s-4d(all)/R_";
-               //path = "/home/baxter/Documents/Observable/Input/radial/Ground state/MCHF_1s-4f/R_";
-                 path = "/home/baxter/Documents/Observable/Input/radial/Ground state/hneg/R_";
-               break;
-               
-            default:
-               std::cout << "readradial error: Improper centre/type signifier" << std::endl;
-               return;
-         }
 
          std::stringstream ss;
          ss << n << l << ".txt";
-         path += ss.str();
+         std::string fullpath = path + ss.str();
 
          //Open file:
-         std::ifstream readfile(path.c_str());
+         std::ifstream readfile(fullpath.c_str());
 
          //Give R_nl(0) some value (doesn't really matter what it is as long as its not zero):
          Rad[c][t][n][l][0] = 1.0;
@@ -205,20 +156,11 @@ void WaveFunction::readamplitudes( const char centre, int energy ) {
    //setup the path string:
    switch (centre) {
       case 'T':
-         //path = "/home/baxter/Documents/Observable/Input/amplitudes/old/E";
-         //path = "/home/baxter/Documents/Observable/Input/amplitudes/OPM/E";
-         //path = "/home/baxter/Documents/Observable/Input/amplitudes/MCHF_1s4d/E";
-         //path = "/home/baxter/Documents/Observable/Input/amplitudes/MCHF_1s4d(all)/E";
-           path = "/home/baxter/Documents/Observable/Input/amplitudes/phe/target/E";
+           path = "./input/amps/target/E";
          break;
 
       case 'P':
-           path = "/home/baxter/Desktop/E";   
-         //path = "/home/baxter/Documents/Observable/Input/amplitudes/old/E";
-         //std::string path = "/home/baxter/Documents/Observable/Input/amplitudes/OPM/E";
-         //std::string path = "/home/baxter/Documents/Observable/Input/amplitudes/MCHF_1s4d/E";
-         //std::string path = "/home/baxter/Documents/Observable/Input/amplitudes/MCHF_1s4d(all)/E";
-           path = "/home/baxter/Documents/Observable/Input/amplitudes/phe/projectile/E";   
+           path = "./input/amps/projectile/E";
          break;
          
       default:
@@ -258,12 +200,28 @@ void WaveFunction::readamplitudes( const char centre, int energy ) {
 }
 
 
-void WaveFunction::readinput( const char centre, const char* inputpath ) {
+void WaveFunction::readinput( const char centre ) {
    /*Reads and stores the wave function quantum number data from the file located at inputpath.*/
 
-   std::ifstream readfile ( inputpath );
-   std::string line;
+   std::string path, line;
    int N;
+
+   //setup the path string:
+   switch (centre) {
+      case 'T':
+           path = "./input/wfn/target/targ-wfn.txt";
+         break;
+
+      case 'P':
+           path = "./input/wfn/projectile/proj-wfn.txt";
+         break;
+         
+      default:
+         std::cout << "readamplitudes error: Improper centre label" << std::endl;
+         return;
+   }
+   
+   std::ifstream readfile ( path.c_str() );
 
    //Read the number of terms:
    getline(readfile,line);

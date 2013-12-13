@@ -14,7 +14,7 @@ class WaveFunction {
 
    public:
       //Functions:
-      WaveFunction( const char*, const char* , int, bool );
+      WaveFunction( int, bool );
       WaveFunction()                  = delete;  //no default
       WaveFunction( WaveFunction & )  = delete;  //no copy
       WaveFunction( WaveFunction && ) = delete;  //no move
@@ -51,7 +51,7 @@ class WaveFunction {
       void readlattice();
       void readradial( const char, const char );
       void readamplitudes( const char, int );
-      void readinput( const char, const char* );
+      void readinput( const char );
       int r_index( double );
       double R( const char, const char, int , int , double );
       double Hlike( int, double );
