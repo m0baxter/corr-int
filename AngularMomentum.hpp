@@ -1,7 +1,4 @@
 
-#include <algorithm>
-#include <math.h>
-
 #ifndef ANGULARMOMENTUM_HPP
 #define ANGULARMOMENTUM_HPP
 

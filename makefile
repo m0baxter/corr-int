@@ -1,21 +1,22 @@
 
 COMP = g++
-FLAGS = -Wall -pedantic
+FLAGS = -std=c++11 -Wall -pedantic -flto -Ofast -funroll-loops -march=native
+SRC = $(wildcard *.cpp)
+OBJ = $(SRC:.cpp=.o)
+DPND = $(SRC:.cpp=.d)
 
-main : main.o wavefunction.o AngularMomentum.o newtoncotes.o makefile
-	      $(COMP) -o main main.o wavefunction.o AngularMomentum.o newtoncotes.o
+main : $(OBJ)
+	$(COMP) $(FLAGS) $^ -o $@
+	
+%.o: %.cpp
+	$(COMP) $(FLAGS) -MMD -MP -c $< -o $@
 
 main.o : main.cpp wavefunction.hpp makefile
 	        $(COMP) -c $(FLAGS) main.cpp
-
-wavefunction.o : wavefunction.cpp wavefunction.hpp AngularMomentum.hpp newtoncotes.hpp makefile
-	                $(COMP) -c $(FLAGS) wavefunction.cpp
-
-AngularMomentum.o : AngularMomentum.cpp AngularMomentum.hpp makefile
-				    $(COMP) -c $(FLAGS) AngularMomentum.cpp
-
-newtoncotes.o : newtoncotes.cpp newtoncotes.hpp makefile
-		          $(COMP) -c $(FLAGS) newtoncotes.cpp
-
 clean:
-		rm  main.o wavefunction.o AngularMomentum.o newtoncotes.o
+	rm  *.d *.o
+	
+cleanall:
+	rm  *.d *.o main
+	
+-include $(DPND)

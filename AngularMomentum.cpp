@@ -1,4 +1,6 @@
 
+#include <algorithm>
+#include <math.h>
 #include "AngularMomentum.hpp"
 
 const double PI = 3.141592653589793238462643383279502884197169399375105820974944592307816406286208998628034825342117067982;
@@ -9,7 +11,8 @@ int factorial(int n) {
 	if ( n <= 1 ) {
 
 		return 1;
-	} else {
+	}
+	else {
 
 		int fact = 1;
 
@@ -21,29 +24,16 @@ int factorial(int n) {
 }
 
 bool TriangleBroken ( int l1, int l2, int l3 ) {
-	/*Tests whether the triangle condition |l1 - l2| <= l3 <= l1 - l2 is broken. If it does not it returns True, else False*/
+	/*Tests whether the triangle condition |l1 - l2| <= l3 <= l1 - l2 is broken.
+	If it does not it returns True, else False*/
 
-	if ( abs( l1 - l2 ) > l3 || l1 + l2 < l3 ) {
-
-		return true;
-	}
-	else if ( abs( l2 - l3 ) > l1 || l2 + l3 < l1 ) {
-
-		return true;
-	}
-	else if ( abs( l3 - l1 ) > l2 || l3 + l1 < l2 ) {
-
-		return true;
-	}
-	else {
-
-		return false;
-	}
+   return ( abs( l1 - l2 ) > l3 ) or ( l1 + l2 < l3 );
 }
 
 
 bool IsEven( int i ) {
-	/*Checks whether the integer i is even. Does not check all the conditions, most will be met from the contex.*/
+	/*Checks whether the integer i is even. Does not check all the conditions,
+	most will be met from the contex.*/
 
 	return (i % 2) == 0;
 }

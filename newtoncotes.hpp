@@ -1,6 +1,4 @@
 
-#include <math.h>
-
 #ifndef NEWTONCOTES_HPP
 #define NEWTONCOTES_HPP
 
