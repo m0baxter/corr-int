@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-=======
 
 #include <iostream>
 #include <fstream>
@@ -12,23 +10,10 @@
 #include "StringManipulators.hpp"
 #include "newtoncotes.hpp"
 #include "AngularMomentum.hpp"
->>>>>>> 2centre
 #include "wavefunction.hpp"
 
 
-<<<<<<< HEAD
-	//initialize tables:
-	readlattice();
-	readradial();
-	readradial_gs();
-	readamplitudes( energy );
-	readinput( inputpath );
-
-	//Calculate table of integrals
-	generate_integral_table();
-=======
 const double PI = 3.141592653589793238462643383279502884197169399375105820974944592307816406286208998628034825342117067982;
->>>>>>> 2centre
 
 WaveFunction::WaveFunction( int energy, bool wb ) {
    /*Constructor for objects of class WaveFunction.*/
