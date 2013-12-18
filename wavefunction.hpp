@@ -52,9 +52,8 @@ class WaveFunction {
       void readradial( const char, const char );
       void readamplitudes( const char, int );
       void readinput( const char );
-      int r_index( double );
-      double R( const char, const char, int , int , double );
-      double Hlike( int, double );
+      double R( const char, const char, int , int , int );
+      double Hlike( int, int );
       std::complex<double> a( const char, int , int, int, int );
       std::unique_ptr<double[]> integrand( const char, int , int , int , int , int , int , int , int );
       void generate_integral_table( const char );

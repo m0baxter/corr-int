@@ -287,25 +287,10 @@ void WaveFunction::readinput( const char centre ) {
 }
 
 
-int WaveFunction::r_index( double x) {
-   /*Returns the index of the value x in  the lattice table. If x not in r not sure.*/
-
-   for (int i = 0; i < LEN; ++i) {
-      if (r[i] == x) {
-         return i;
-      }
-   }
-
-   //If the loop exits:
-   std::cout << "Error: invalid grid point" << std::endl;
-   return 0;
-}
-
-
-double WaveFunction::R( const char centre, const char type, int n, int l, double x) {
+double WaveFunction::R( const char centre, const char type, int n, int l, int i ) {
    /*Returns the value of the R_nl function evaluated at x. x must be in r (ie a lattice point).*/
    
-   return Rad[TP_toint(centre)][DG_toint(type)][n][l][r_index(x)];
+   return Rad[TP_toint(centre)][DG_toint(type)][n][l][i];
 }
 
 
@@ -316,10 +301,10 @@ std::complex<double> WaveFunction::a( const char centre, int i, int n, int l, in
 }
 
 
-double WaveFunction::Hlike( int z, double x ) {
+double WaveFunction::Hlike( int z, int i ) {
    /*Returns the of the He 1+ ground state at the point x.*/
 
-   return sqrt(4.0*z*z*z) * exp(-z*x) ;
+   return sqrt(4.0*z*z*z) * exp(-z*r[i]) ;
 }
 
 
@@ -349,7 +334,7 @@ std::unique_ptr<double[]> WaveFunction::integrand(const char c, int n1, int l1, 
 
    for (int i = 1; i < LIMIT; ++i) {
 
-      result[i] = r[i]*r[i] * R(c,'G', s_n_1 , s_l_1, r[i]) * R(c,'G', s_n_2 , s_l_2, r[i]) * ( R(c,'D',n1,l1,r[i])/R(c,'D',1,0,r[i]) ) * ( R(c,'D',n2,l2,r[i])/R(c,'D',1,0,r[i]) );
+      result[i] = r[i]*r[i] * R(c,'G', s_n_1 , s_l_1, r[i]) * R(c,'G', s_n_2 , s_l_2, i) * ( R(c,'D',n1,l1,i)/R(c,'D',1,0,i) ) * ( R(c,'D',n2,l2,i)/R(c,'D',1,0,i) );
    }
 
    return result;
@@ -366,7 +351,7 @@ std::unique_ptr<double[]> WaveFunction::integrand_wb( const char c, double N, in
 
    for (int i = 1; i < LIMIT; ++i) {
 
-      result[i] = r[i]*r[i] * R(c,'G', s_n_1 , s_l_1, r[i]) * R(c,'G', s_n_2 , s_l_2, r[i]) * ( R(c,'D',n1,l1,r[i])  * R(c,'D',n2,l2,r[i]) / ( (2 - N) * Hlike(z,r[i])*Hlike(z,r[i]) + 2.0 * (N - 1) * R(c,'D',1,0,r[i]) * R(c,'D',1,0,r[i]) ) );
+      result[i] = r[i]*r[i] * R(c,'G', s_n_1 , s_l_1, i) * R(c,'G', s_n_2 , s_l_2, i) * ( R(c,'D',n1,l1,i)  * R(c,'D',n2,l2,i) / ( (2 - N) * Hlike(z,i)*Hlike(z,i) + 2.0 * (N - 1) * R(c,'D',1,0,i) * R(c,'D',1,0,i) ) );
    }
 
    return result;
@@ -615,7 +600,7 @@ double  WaveFunction::correlationintegral_wb( const char c, int k ) {
 
       //Generate the integral table for the given impact parameter/N value:
       generate_integral_table_wb(c,N_e);
-      
+  
       //Sweep through the terms of the wave function:
       for (int i = 0; i < N; ++i) {
          for (int j = 0; j < N; ++j) {
