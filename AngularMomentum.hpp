@@ -2,10 +2,10 @@
 #ifndef ANGULARMOMENTUM_HPP
 #define ANGULARMOMENTUM_HPP
 
-	int factorial( int );
-	bool TriangleBroken ( int, int, int );
-	bool IsEven( int );
-	double _3j( int , int , int , int , int , int );
-	double gaunt( int, int, int, int, int, int );
+   int factorial( const int );
+   bool TriangleBroken ( const int, const int, const int );
+   bool IsEven( int );
+   double _3j( const int, const int, const int, const int, const int, const int );
+   double gaunt( const int, const int, const int, const int, const int, const int );
 
 #endif

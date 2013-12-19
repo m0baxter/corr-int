@@ -5,6 +5,7 @@
 #include <vector>
 #include <complex>
 #include <sstream>
+#include <cmath>
 #include <algorithm>
 #include <memory>
 #include "StringManipulators.hpp"
@@ -13,9 +14,9 @@
 #include "wavefunction.hpp"
 
 
-const double PI = 3.141592653589793238462643383279502884197169399375105820974944592307816406286208998628034825342117067982;
+const double PI = acos(-1.0);
 
-WaveFunction::WaveFunction( int energy, bool wb ) {
+WaveFunction::WaveFunction( const int energy, const bool wb ) {
    /*Constructor for objects of class WaveFunction.*/
 
    //initialize tables:
@@ -65,7 +66,7 @@ int WaveFunction::charge( const char c ) {
 }
 
 
-float WaveFunction::get_impact( int i) {
+float WaveFunction::get_impact( const int i) {
 
    return b[i];
 }
@@ -145,7 +146,7 @@ void WaveFunction::readradial( const char centre, const char type ) {
 }
 
 
-void WaveFunction::readamplitudes( const char centre, int energy ) {
+void WaveFunction::readamplitudes( const char centre, const int energy ) {
    /*Reads in the impact parameter and amplitude data and stores it in b and amp. The energy parameter must be 100 or 2000.*/
 
    std::string path, line;
@@ -287,28 +288,28 @@ void WaveFunction::readinput( const char centre ) {
 }
 
 
-double WaveFunction::R( const char centre, const char type, int n, int l, int i ) {
+double WaveFunction::R( const char centre, const char type, const int n, const int l, const int i ) {
    /*Returns the value of the R_nl function evaluated at x. x must be in r (ie a lattice point).*/
    
    return Rad[TP_toint(centre)][DG_toint(type)][n][l][i];
 }
 
 
-std::complex<double> WaveFunction::a( const char centre, int i, int n, int l, int m ) {
+std::complex<double> WaveFunction::a( const char centre, const int i, const int n, const int l, const int m ) {
    /*Return the coefficient a_centre[n][l][m].*/
    
    return amps[TP_toint(centre)][i][n][l][m];
 }
 
 
-double WaveFunction::Hlike( int z, int i ) {
+double WaveFunction::Hlike( const int z, const int i ) {
    /*Returns the of the He 1+ ground state at the point x.*/
 
    return sqrt(4.0*z*z*z) * exp(-z*r[i]) ;
 }
 
 
-double WaveFunction::indi_electron( const char centre, int i ) {
+double WaveFunction::indi_electron( const char centre, const int i ) {
    /*Calculates the indipendent electron model ionization probability (p_centre)
    for impact parameter b[i].*/
 
@@ -325,7 +326,7 @@ double WaveFunction::indi_electron( const char centre, int i ) {
 }
 
 
-std::unique_ptr<double[]> WaveFunction::integrand(const char c, int n1, int l1, int n2, int l2 , int s_n_1 , int s_l_1, int s_n_2 , int s_l_2) {
+std::unique_ptr<double[]> WaveFunction::integrand(const char c, const int n1, const int l1, const int n2, const int l2, const int s_n_1, const int s_l_1, const int s_n_2, const int s_l_2) {
    /*Generates the values of the integrand for the given values.*/
 
    std::unique_ptr<double[]> result(new double[LIMIT]);
@@ -341,7 +342,7 @@ std::unique_ptr<double[]> WaveFunction::integrand(const char c, int n1, int l1, 
 }
 
 
-std::unique_ptr<double[]> WaveFunction::integrand_wb( const char c, double N, int n1, int l1, int n2, int l2 , int s_n_1 , int s_l_1, int s_n_2 , int s_l_2) {
+std::unique_ptr<double[]> WaveFunction::integrand_wb( const char c, const double N, const int n1, const int l1, const int n2, const int l2, const int s_n_1, const int s_l_1, const int s_n_2, const int s_l_2) {
    /*Generates the values of the WB integrand for the given values.*/
 
    std::unique_ptr<double[]> result(new double[LIMIT]);
@@ -390,7 +391,7 @@ void WaveFunction::generate_integral_table( const char centre ) {
 }
 
 
-void WaveFunction::generate_integral_table_wb( const char centre, double N  ) {
+void WaveFunction::generate_integral_table_wb( const char centre, const double N  ) {
    /*Fills the WB integral table with integrals.*/
    
    int c = TP_toint(centre);
@@ -422,21 +423,21 @@ void WaveFunction::generate_integral_table_wb( const char centre, double N  ) {
 }
 
 
-double WaveFunction::table( const char centre, int n1, int l1, int n2, int l2 , int n1_gs , int l1_gs, int n2_gs , int l2_gs ) {
+double WaveFunction::table( const char centre, const int n1, const int l1, const int n2, const int l2, const int n1_gs, const int l1_gs, const int n2_gs, const int l2_gs ) {
    /*Returns the integral for the given radial function identifiers on centre.*/
    
    return int_table[TP_toint(centre)][n1][l1][n2][l2][n1_gs][l1_gs][n2_gs][l2_gs];
 }
 
 
-double WaveFunction::table_wb( const char centre, int n1, int l1, int n2, int l2 , int n1_gs , int l1_gs, int n2_gs , int l2_gs ) {
+double WaveFunction::table_wb( const char centre, const int n1, const int l1, const int n2, const int l2, const int n1_gs, const int l1_gs, const int n2_gs, const int l2_gs ) {
    /*Returns the integral for the given radial function identifiers on centre.*/
    
    return int_table_wb[TP_toint(centre)][n1][l1][n2][l2][n1_gs][l1_gs][n2_gs][l2_gs];
 }
 
 
-double  WaveFunction::correlationintegral( const char c, int k ) {
+double  WaveFunction::correlationintegral( const char c, const int k ) {
    /*Calculates the correlation integral for the impact parameter b[i].*/
 
    //Holds the result:
@@ -553,7 +554,7 @@ double  WaveFunction::correlationintegral( const char c, int k ) {
 }
 
 
-double  WaveFunction::correlationintegral_wb( const char c, int k ) {
+double  WaveFunction::correlationintegral_wb( const char c, const int k ) {
    /*Calculates the correlation integral for the impact parameter b[i].*/
    
    //Holds the result:
