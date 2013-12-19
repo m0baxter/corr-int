@@ -19,9 +19,6 @@ int main() {
 
    cout.precision(10);
 
-   //setup gauss method:
-   gauss_setup();
-
    time_t begin, setup, t1, t2, end;
 
    time(&begin);

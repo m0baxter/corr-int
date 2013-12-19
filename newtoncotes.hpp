@@ -4,7 +4,6 @@
 #ifndef NEWTONCOTES_HPP
 #define NEWTONCOTES_HPP
 
-   void gauss_setup();
    double lagrangebasis( const double *x, const int, const double, const int );
    double lagrangeinterp( const double *x, const double *y, const double, const int );
    std::unique_ptr<double[]> slice( const double *arr, const int, const int );

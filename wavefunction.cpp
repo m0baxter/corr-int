@@ -372,7 +372,7 @@ void WaveFunction::generate_integral_table( const char centre ) {
                   for (int l1_gs = 0; l1_gs < n1_gs; ++l1_gs) {
                      for (int n2_gs = n1_gs; n2_gs < 5; ++n2_gs) {
                         for (int l2_gs = 0; l2_gs < n2_gs; ++l2_gs) {
-                        
+
                            std::unique_ptr<double[]> temp = integrand( centre, n1, l1, n2, l2, n1_gs, l1_gs, n2_gs, l2_gs);
 
                            int_table[c][n1][l1][n2][l2][n1_gs][l1_gs][n2_gs][l2_gs] = newtoncotes(r,temp.get(), LIMIT);
@@ -385,7 +385,7 @@ void WaveFunction::generate_integral_table( const char centre ) {
                   }
                }
             }
-         }            
+         }
       }
    }
 }
@@ -404,7 +404,7 @@ void WaveFunction::generate_integral_table_wb( const char centre, const double N
                   for (int l1_gs = 0; l1_gs < n1_gs; ++l1_gs) {
                      for (int n2_gs = n1_gs; n2_gs < 5; ++n2_gs) {
                         for (int l2_gs = 0; l2_gs < n2_gs; ++l2_gs) {
-                        
+
                            std::unique_ptr<double[]> temp = integrand_wb( centre, N, n1, l1, n2, l2, n1_gs, l1_gs, n2_gs, l2_gs);
 
                            int_table_wb[c][n1][l1][n2][l2][n1_gs][l1_gs][n2_gs][l2_gs] = newtoncotes(r,temp.get(), LIMIT);
@@ -425,14 +425,14 @@ void WaveFunction::generate_integral_table_wb( const char centre, const double N
 
 double WaveFunction::table( const char centre, const int n1, const int l1, const int n2, const int l2, const int n1_gs, const int l1_gs, const int n2_gs, const int l2_gs ) {
    /*Returns the integral for the given radial function identifiers on centre.*/
-   
+
    return int_table[TP_toint(centre)][n1][l1][n2][l2][n1_gs][l1_gs][n2_gs][l2_gs];
 }
 
 
 double WaveFunction::table_wb( const char centre, const int n1, const int l1, const int n2, const int l2, const int n1_gs, const int l1_gs, const int n2_gs, const int l2_gs ) {
    /*Returns the integral for the given radial function identifiers on centre.*/
-   
+
    return int_table_wb[TP_toint(centre)][n1][l1][n2][l2][n1_gs][l1_gs][n2_gs][l2_gs];
 }
 

@@ -3,29 +3,15 @@
 #include <memory>
 #include "newtoncotes.hpp"
 
-/* 
-Global Variables:
-*/
-
-double roots[4];   //roots used as abscissas in Gauss method.
-double weights[4]; //weights used in the Gauss method.
-
-void gauss_setup() {
-   /*Calculates and stores the abscissas/weights for the 4th order Gauss integration method.*/
-
-   //Calculate and store the roots:
-   roots[0] =  sqrt( 525.0 - 70.0 * sqrt( 30.0 ) ) /35.0;
-   roots[1] = -sqrt( 525.0 - 70.0 * sqrt( 30.0 ) ) /35.0;
-   roots[2] =  sqrt( 525.0 + 70.0 * sqrt( 30.0 ) ) /35.0;
-   roots[3] = -sqrt( 525.0 + 70.0 * sqrt( 30.0 ) ) /35.0;
-
-   //calculate and store the weights:
-   weights[0] = ( 18.0 + sqrt( 30.0 ) ) / 36.0;
-   weights[1] = ( 18.0 + sqrt( 30.0 ) ) / 36.0;
-   weights[2] = ( 18.0 - sqrt( 30.0 ) ) / 36.0;
-   weights[3] = ( 18.0 - sqrt( 30.0 ) ) / 36.0;
-}
-
+//roots used as abscissas in Gauss method.
+double roots[4] = { sqrt( 525.0 - 70.0 * sqrt( 30.0 ) ) /35.0,
+                   -sqrt( 525.0 - 70.0 * sqrt( 30.0 ) ) /35.0,
+                    sqrt( 525.0 + 70.0 * sqrt( 30.0 ) ) /35.0,
+                   -sqrt( 525.0 + 70.0 * sqrt( 30.0 ) ) /35.0};
+                   
+//weights used in the Gauss method.
+double weights[4] ={ ( 18.0 + sqrt( 30.0 ) ) / 36.0, (   18.0 + sqrt( 30.0 ) ) / 36.0,
+                     ( 18.0 - sqrt( 30.0 ) ) / 36.0, ( 18.0 - sqrt( 30.0 ) ) / 36.0};
 
 double lagrangebasis( const double *x, const int k, const double p, const int n) {
    /*Return the value at p of the Lagrange basis element k on the points x of degree n.*/
