@@ -14,11 +14,12 @@ class WaveFunction {
 
    public:
       //Functions:
-      WaveFunction( const int, const bool );
+      WaveFunction( const int, const int, const bool );
       WaveFunction()                  = delete;  //no default
       WaveFunction( WaveFunction & )  = delete;  //no copy
       WaveFunction( WaveFunction && ) = delete;  //no move
       ~WaveFunction();
+      int get_Nb();
       float get_impact( const int );
       double indi_electron( const char, const int );
       double correlationintegral( const char, const int );
@@ -31,8 +32,9 @@ class WaveFunction {
       static const int LIMIT = 1543; //1001;
       double r[LEN];                                  //Lattice points for the radial R_nl functions.
       double Rad[2][2][5][4][LEN];                    //The R_nl functions.
-      float b[30];                                    //holds the values of the impact parameter.
-      std::complex<double> amps[2][30][5][4][7];      //Holds the amplitude values for the 30 impact parameters.
+      static const int Nb = 71;                       //Number of impact parameters in grid.
+      float b[Nb];                                    //holds the values of the impact parameter.
+      std::complex<double> amps[2][Nb][5][4][7];      //Holds the amplitude values for the Nb impact parameters.
       double int_table[2][5][4][5][4][5][4][5][4];    //Holds the integral table.
       double int_table_wb[2][5][4][5][4][5][4][5][4]; //Holds the integral table for the Wilken and Bauer version.
       
@@ -50,7 +52,7 @@ class WaveFunction {
       int charge( const char );
       void readlattice();
       void readradial( const char, const char );
-      void readamplitudes( const char, const int );
+      void readamplitudes( const char, const int, const int );
       void readinput( const char );
       double R( const char, const char, const int, const int, const int );
       double Hlike( int, int );
@@ -63,5 +65,8 @@ class WaveFunction {
       double table_wb( const char, const int, const int, const int, const int, const int, const int, const int, const int );
       
 };
+
+//Additional functions:
+double corrint_TP( const double, const double, const double, const double );
 
 #endif

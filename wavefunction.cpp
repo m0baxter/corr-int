@@ -16,7 +16,7 @@
 
 const double PI = acos(-1.0);
 
-WaveFunction::WaveFunction( const int energy, const bool wb ) {
+WaveFunction::WaveFunction( const int energy, const int z, const bool wb ) {
    /*Constructor for objects of class WaveFunction.*/
 
    //initialize tables:
@@ -25,8 +25,8 @@ WaveFunction::WaveFunction( const int energy, const bool wb ) {
    readradial('P', 'D');
    readradial('T', 'G');
    readradial('P', 'G');
-   readamplitudes( 'T', energy );
-   readamplitudes( 'P', energy );
+   readamplitudes( 'T', energy, z );
+   readamplitudes( 'P', energy, z );
    readinput( 'T' );
    readinput( 'P' );
 
@@ -63,6 +63,12 @@ int WaveFunction::DG_toint( const char c ) {
 int WaveFunction::charge( const char c ) {
 
    return ( (c + 0) - 76 )/4;
+}
+
+
+int WaveFunction::get_Nb() {
+
+   return Nb;
 }
 
 
@@ -146,7 +152,7 @@ void WaveFunction::readradial( const char centre, const char type ) {
 }
 
 
-void WaveFunction::readamplitudes( const char centre, const int energy ) {
+void WaveFunction::readamplitudes( const char centre, const int energy, const int z ) {
    /*Reads in the impact parameter and amplitude data and stores it in b and amp. The energy parameter must be 100 or 2000.*/
 
    std::string path, line;
@@ -157,17 +163,24 @@ void WaveFunction::readamplitudes( const char centre, const int energy ) {
    //setup the path string:
    switch (centre) {
       case 'T':
-           path = "./input/amps/target/E";
+           path = "./input/amps/target/z";
          break;
 
       case 'P':
-           path = "./input/amps/projectile/E";
+           path = "./input/amps/projectile/z";
          break;
          
       default:
          std::cout << "readamplitudes error: Improper centre label" << std::endl;
          return;
    }
+   
+   ss << z << "/E";
+   path += ss.str();
+   
+   //Wipe ss:
+   ss.str( std::string() );
+   ss.clear();
 
    ss << energy << ".txt";
    path += ss.str();
@@ -175,7 +188,7 @@ void WaveFunction::readamplitudes( const char centre, const int energy ) {
    //open file.
    std::ifstream readfile(path.c_str());
 
-   for (int i = 0; i < 30; ++i) {
+   for (int i = 0; i < 71; ++i) {
 
       //read impact parameter line.
       getline(readfile,line);
@@ -681,3 +694,23 @@ double  WaveFunction::correlationintegral_wb( const char c, const int k ) {
       return   128.0 * ( N_e - 1 ) * PI * PI * real( Ic );
    }
 }
+
+
+double corrint_TP( const double pt, const double pp, const double Ict, const double Icp ) {
+
+   double u1 = 2*pt - Ict;
+   double u2 = 2*pt + 2*pp - 0.5*(Ict + Icp);
+   double u3 = 1.0;
+   double u4 = 2*pp - Icp;
+   
+   double l1 = 2*pt - Ict - 1;
+   double l2 = 2*pt + 2*pp - 0.5*(Ict + Icp) - 1;
+   double l3 = 0.0;
+   double l4 = 2*pp - Icp - 1;
+   
+   double up  = std::min( {u1, u2, u3, u4} );
+   double low = std::max( {l1, l2, l3, l4} );
+   
+   return 0.5*(up + low);
+}
+
