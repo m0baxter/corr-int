@@ -1,13 +1,14 @@
 
+#include <memory>
+
 #ifndef NEWTONCOTES_HPP
 #define NEWTONCOTES_HPP
 
-	void gauss_setup();
-	double lagrangebasis( double x[], int , double , int );
-	double lagrangeinterp( double x[],  double y[], double , int );
-	double* slice( double arr[], int , int );
-	double transform( double , double , double );
-	double gauss_interp( double x[], double y[], int );
-	double newtoncotes( double x[], double y[], int );
+   double lagrangebasis( const double *x, const int, const double, const int );
+   double lagrangeinterp( const double *x, const double *y, const double, const int );
+   std::unique_ptr<double[]> slice( const double *arr, const int, const int );
+   double transform( const double, const double, const double );
+   double gauss_interp( const double *x, const double *y, const int );
+   double newtoncotes( const double *x, const double *y, const int );
 
 #endif
