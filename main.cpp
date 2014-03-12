@@ -1,8 +1,6 @@
 
 #include <iostream>
 #include <fstream>
-#include <string>
-#include <sstream>
 #include <time.h>
 #include "newtoncotes.hpp"
 #include "wavefunction.hpp"
@@ -24,11 +22,8 @@ int main() {
 
    time(&begin);
 
-   std::stringstream ss;
-   ss << "./output/MCHF-un/" << "z" << z << "/He2pHe_MCHF_resp_E" << E << "_z" << z << ".txt";
-
    //Open file to be written to:
-   ofstream writefile  ( ss.str().c_str() );
+   ofstream writefile  ( "" );
    writefile << "b p_T p_P Ic_TT Ic_PP Ic_TP ie_pTT ie_pTI ie_pII ie_pTP ie_pIP ie_pPP p_TT p_TI p_II p_TP p_PI p_PP" << endl;
 
    cout << "Starting E = " << E << " keV" << endl;
