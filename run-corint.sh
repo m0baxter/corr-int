@@ -2,18 +2,21 @@
 
 # $1 = name of calculation
 
+Zs=$( sed -n "1p" ./input/ranges.in )
+Es=$( sed -n "2p" ./input/ranges.in )
+
 mkdir -p runout
 
 echo -e "\nStart: $(date)\n"
 start=$(date +%s)
 
-for z in 28 29 30 31 32 33 34
+for z in ${Zs[@]}
 do
 
    mkdir -p ./output/$1-un/z$z
    mkdir -p ./output/$1/z$z
 
-   for E in 1 2 5 7 10 15 20 25 30 40 50 60 70 80 100 200 500 1000 2000
+   for E in ${Es[@]}
    do
    
       sed -i "15s/.*/   int E = $E;/" main.cpp
