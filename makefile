@@ -1,6 +1,6 @@
 
 COMP = g++
-FLAGS = -std=c++11 -Wall -pedantic -flto -Ofast -funroll-loops -march=native
+FLAGS = -std=c++0x -Wall -pedantic -O3 -funroll-loops -march=native -fopenmp
 SRC = $(wildcard *.cpp)
 OBJ = $(SRC:.cpp=.o)
 DPND = $(SRC:.cpp=.d)

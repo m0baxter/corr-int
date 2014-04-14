@@ -7,20 +7,14 @@ const double PI = acos(-1.0);
 
 int factorial( const int n ) {
    /*returns n!*/
-
-   if ( n <= 1 ) {
-
-      return 1;
+   
+   int fact = 1;
+   
+   for(int i = 2; i <= n; ++i) {
+      fact *= i;
    }
-   else {
-
-      int fact = 1;
-
-      for (int i = 1; i < n + 1; ++i) {
-         fact = fact*i;
-      }
-      return fact;
-   }
+   
+   return fact;
 }
 
 bool TriangleBroken ( const int l1, const int l2, const int l3 ) {
@@ -76,7 +70,7 @@ double _3j( const int l1, const int m1, const int l2, const int m2, const int l3
 
       phase = -phase;
       sum += norm*temp;
-      }
+   }
 
    return sum;
 }

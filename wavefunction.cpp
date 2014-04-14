@@ -13,7 +13,6 @@
 #include "AngularMomentum.hpp"
 #include "wavefunction.hpp"
 
-
 const double PI = acos(-1.0);
 
 WaveFunction::WaveFunction( const int energy, const int z, const bool wb ) {
@@ -62,7 +61,17 @@ int WaveFunction::DG_toint( const char c ) {
 
 int WaveFunction::charge( const char c ) {
 
-   return ( (c + 0) - 76 )/4;
+   switch( c ) {
+      case 'T':
+         return QT;
+         
+      case 'P':
+         return QP;
+         
+      default:
+         std::cout << "Bad target/projectile charge" << std::endl;
+         return 0;
+   }
 }
 
 
@@ -365,7 +374,7 @@ std::unique_ptr<double[]> WaveFunction::integrand_wb( const char c, const double
 
    for (int i = 1; i < LIMIT; ++i) {
 
-      result[i] = r[i]*r[i] * R(c,'G', s_n_1 , s_l_1, i) * R(c,'G', s_n_2 , s_l_2, i) * ( R(c,'D',n1,l1,i)  * R(c,'D',n2,l2,i) / ( (2 - N) * Hlike(z,i)*Hlike(z,i) + 2.0 * (N - 1) * R(c,'D',1,0,i) * R(c,'D',1,0,i) ) );
+      result[i] = r[i]*r[i] * R(c,'G', s_n_1 , s_l_1, i) * R(c,'G', s_n_2 , s_l_2, i) * ( R(c,'D',n1,l1,i)  * R(c,'D',n2,l2,i) / ( (2 - N) * Hlike(z,i)*Hlike(z,i) + 2.0 * (N - 1) * R('T','D',1,0,i) * R('T','D',1,0,i) ) );
    }
 
    return result;
@@ -409,6 +418,8 @@ void WaveFunction::generate_integral_table_wb( const char centre, const double N
    
    int c = TP_toint(centre);
 
+#  pragma omp parallel for num_threads(12) \
+     schedule(guided)
    for (int n1 = 1; n1 < 5; ++n1) {
       for (int l1 = 0; l1 < n1; ++l1) {
          for (int n2 = n1; n2 < 5; ++n2) {
@@ -571,14 +582,8 @@ double  WaveFunction::correlationintegral_wb( const char c, const int k ) {
    /*Calculates the correlation integral for the impact parameter b[i].*/
    
    //Holds the result:
-   std::complex<double> Ic = std::complex<double>(0.0,0.0);
-
-   //holds the results of the angular integrals:
-   double G1;
-   double G2;
-
-   //Used for temperary storage:
-   double phase, phase1, phase2, G3, G4;
+//   std::complex<double> Ic = std::complex<double>(0.0,0.0);
+   double Ic = 0.0;
 
    //Calculate the fractional ionization N(t):
    double N_e = 2.0 * indi_electron(c,k);
@@ -587,7 +592,7 @@ double  WaveFunction::correlationintegral_wb( const char c, const int k ) {
    int N;
    double *t;
    int (*T)[2][3];
-   
+
    //Pick the ground state configuration data on cnetre c:
    switch (c) {
       case 'T':
@@ -614,8 +619,12 @@ double  WaveFunction::correlationintegral_wb( const char c, const int k ) {
 
       //Generate the integral table for the given impact parameter/N value:
       generate_integral_table_wb(c,N_e);
-  
+
       //Sweep through the terms of the wave function:
+      #pragma omp parallel reduction(+:Ic) num_threads(12)
+      {
+      #pragma omp for collapse(2) \
+              schedule(guided)
       for (int i = 0; i < N; ++i) {
          for (int j = 0; j < N; ++j) {
 
@@ -625,7 +634,7 @@ double  WaveFunction::correlationintegral_wb( const char c, const int k ) {
 
                   if ( IsEven( T[i][0][1] + T[j][0][1] + L1) && ! (TriangleBroken( T[i][0][1], T[j][0][1], L1 ) ) && ( T[i][0][2] - T[j][0][2] + M1 == 0) ) {
 
-                     G1 = gaunt ( T[i][0][1], T[i][0][2], T[j][0][1], -T[j][0][2], L1, M1 );
+                     double G1 = gaunt ( T[i][0][1], T[i][0][2], T[j][0][1], -T[j][0][2], L1, M1 );
 
                      //perform the angular intergal of the second particle by sweeping through the possible Gaunt integrals:
                      for (int L2 = abs( T[i][1][1] - T[j][1][1] ); L2 <= T[i][1][1] + T[j][1][1]; ++L2 ) {
@@ -633,10 +642,10 @@ double  WaveFunction::correlationintegral_wb( const char c, const int k ) {
 
                            if ( IsEven( T[i][1][1] + T[j][1][1] + L2) && ! (TriangleBroken( T[i][1][1], T[j][1][1], L2 ) ) && ( T[i][1][2] - T[j][1][2] + M1 == 0) ) {
 
-                              G2 =  gaunt ( T[i][1][1], T[i][1][2], T[j][1][1], -T[j][1][2], L2, M2);
+                              double G2 =  gaunt ( T[i][1][1], T[i][1][2], T[j][1][1], -T[j][1][2], L2, M2);
 
                               //calculate the pahse we neglected untill now:
-                              phase = pow(-1.0, T[j][0][2] + T[j][1][2] );
+                              double phase = pow(-1.0, T[j][0][2] + T[j][1][2] );
 
                               //Perform the two sums from the P_lm functions:
                               for (int n1 = 1; n1 < MAXn; ++n1) {
@@ -656,19 +665,21 @@ double  WaveFunction::correlationintegral_wb( const char c, const int k ) {
 
                                                             if ( IsEven( l1 + lp1 + L1) && ! (TriangleBroken(l1, lp1, L1) ) && (m1 - l1 -(mp1 - lp1) - M1 == 0) ) { //here
 
-                                                               G3 = gaunt( l1, m1 - l1, lp1, -(mp1 - lp1), L1, -M1 );
+                                                               double G3 = gaunt( l1, m1 - l1, lp1, -(mp1 - lp1), L1, -M1 );
 
                                                                for (int m2 = 0; m2 < 2*l2 + 1; ++m2) {
                                                                   for (int mp2 = 0; mp2 < 2*lp2 + 1; ++mp2) {
 
                                                                      if ( IsEven( l2 + lp2 + L2) && ! (TriangleBroken(l2, lp2, L2) ) && (m2 - l2 -(mp2 - lp2) - M2 == 0) ) { //here
 
-                                                                        G4 = gaunt( l2, m2 - l2, lp2, -(mp2 - lp2), L2, -M2 );
+                                                                        double G4 = gaunt( l2, m2 - l2, lp2, -(mp2 - lp2), L2, -M2 );
 
-                                                                        phase1 = pow(-1.0, mp1 - lp1 + M1);
-                                                                        phase2 = pow(-1.0, mp2 - lp2 + M2);
-
-                                                                        Ic += a(c,k,n1,l1,m1) * conj( a(c,k,np1,lp1,mp1) ) * a(c,k,n2,l2,m2) * conj( a(c,k,np2,lp2,mp2) ) * temp * phase1 * G3 * phase2 * G4;
+                                                                        double phase1 = pow(-1.0, mp1 - lp1 + M1);
+                                                                        double phase2 = pow(-1.0, mp2 - lp2 + M2);
+                                                                        
+                                                                        double step = real( a(c,k,n1,l1,m1) * conj( a(c,k,np1,lp1,mp1) ) * a(c,k,n2,l2,m2) * conj( a(c,k,np2,lp2,mp2) ) * temp * phase1 * G3 * phase2 * G4 );
+                                                                        Ic += step;
+                                                                       
                                                                      }
                                                                   }
                                                                }
@@ -691,7 +702,10 @@ double  WaveFunction::correlationintegral_wb( const char c, const int k ) {
             }
          }
       }
-      return   128.0 * ( N_e - 1 ) * PI * PI * real( Ic );
+	   }
+//      return   128.0 * ( N_e - 1 ) * PI * PI * real( Ic );
+      return   128.0 * ( N_e - 1 ) * PI * PI * Ic;
+
    }
 }
 

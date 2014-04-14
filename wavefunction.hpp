@@ -27,6 +27,8 @@ class WaveFunction {
 
    private:
       //Variables:
+      static const int QT = 2;
+      static const int QP = 2;
       static const int MAXn = 5;
       static const int LEN = 1601;
       static const int LIMIT = 1543; //1001;

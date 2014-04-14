@@ -1,17 +1,20 @@
 
+#include <cstdlib> 
 #include <iostream>
 #include <fstream>
+#include <string>
+#include <sstream>
 #include <time.h>
 #include "newtoncotes.hpp"
 #include "wavefunction.hpp"
 
 using namespace std;
 
-int main() {
+int main( int argc, char* argv[] ) {
 
    //Create an array to hold the impact energies:
-   int E = 30;
-   int z = 32;
+   int E = stoi(argv[1]);
+   int z = stoi(argv[2]);
    bool WB = true;
 
    cout << "\n" << endl;
@@ -22,18 +25,21 @@ int main() {
 
    time(&begin);
 
-   //Open file to be written to:
-   ofstream writefile  ( "" );
-   writefile << "b p_T p_P Ic_TT Ic_PP Ic_TP ie_pTT ie_pTI ie_pII ie_pTP ie_pIP ie_pPP p_TT p_TI p_II p_TP p_PI p_PP" << endl;
+   std::stringstream ss;
+   ss << "./output/MCHF-un/" << "z" << z << "/He2pHe_MCHF_resp_E" << E << "_z" << z << ".txt";
 
-   cout << "Starting E = " << E << " keV" << endl;
+   //Open file to be written to:
+   ofstream writefile  ( ss.str().c_str() );
+   writefile << "b p_T p_P Ic_TT Ic_PP Ic_TP ie_pTT ie_pTI ie_pII ie_pTP ie_pIP ie_pPP p_TT p_TI p_II p_TP p_PI p_PP\n";
+
+   cout << "Starting E = " << E << " keV\n";
 
    //Create Wave function:
    WaveFunction wfn( E, z, WB );
 
    time(&setup);
 
-   cout << "setup done (s): " << difftime(setup,begin) << endl;
+   cout << "setup done (s): " << difftime(setup,begin) << "\n";
 
    for (int j = 0; j < wfn.get_Nb(); ++j) {
 
@@ -77,18 +83,18 @@ int main() {
                 << Ic_PP             << " " << Ic_TP  << " " << ie_pTT << " " << ie_pTI << " "
                 << ie_pII            << " " << ie_pTP << " " << ie_pIP << " " << ie_pPP << " "
                 << p_TT              << " " << p_TI   << " " << p_II   << " " << p_TP   << " "
-                << p_PI              << " " << p_PP   << endl;
+                << p_PI              << " " << p_PP   << "\n";
 
       time(&t2);
 
-      cout << "done #" << j + 1 << " (s): " << difftime(t2,t1) << endl;
+      cout << "done #" << j + 1 << " (s): " << difftime(t2,t1) << "\n";
    }
 
    writefile.close();
 
    time(&end);
 
-   cout << "\ntotal time (s): " << difftime(end,begin) << endl;
+   cout << "\ntotal time (s): " << difftime(end,begin) << "\n";
    cout << "\n" << endl;
 
    return 0;
