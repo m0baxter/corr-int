@@ -17,7 +17,7 @@ int main( int argc, char* argv[] ) {
    int z = stoi(argv[2]);
    bool WB = true;
 
-   cout << "\n" << endl;
+   cout << "\n\n";
 
    cout.precision(10);
 

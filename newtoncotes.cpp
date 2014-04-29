@@ -10,8 +10,10 @@ double roots[4] = { sqrt( 525.0 - 70.0 * sqrt( 30.0 ) ) /35.0,
                    -sqrt( 525.0 + 70.0 * sqrt( 30.0 ) ) /35.0};
                    
 //weights used in the Gauss method.
-double weights[4] ={ ( 18.0 + sqrt( 30.0 ) ) / 36.0, (   18.0 + sqrt( 30.0 ) ) / 36.0,
-                     ( 18.0 - sqrt( 30.0 ) ) / 36.0, ( 18.0 - sqrt( 30.0 ) ) / 36.0};
+double weights[4] ={ ( 18.0 + sqrt( 30.0 ) ) / 36.0,
+                     ( 18.0 + sqrt( 30.0 ) ) / 36.0,
+                     ( 18.0 - sqrt( 30.0 ) ) / 36.0,
+                     ( 18.0 - sqrt( 30.0 ) ) / 36.0};
 
 double lagrangebasis( const double *x, const int k, const double p, const int n) {
    /*Return the value at p of the Lagrange basis element k on the points x of degree n.*/
@@ -105,4 +107,3 @@ double newtoncotes( const double *x, const double *y, const int n) {
 
    return total;
 }
-

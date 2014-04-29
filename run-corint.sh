@@ -11,7 +11,7 @@ do
 #!/bin/bash
 #PBS -N Ic-z$z-E$E
 #PBS -l walltime=00:30:00
-#PBS -l nodes=1:ppn=12
+#PBS -l nodes=1:ppn=24
 #PBS -r n
 #PBS -V
 #PBS -o ./runout/ic-z$z-E$E.out

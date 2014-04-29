@@ -3,6 +3,7 @@
 #define ANGULARMOMENTUM_HPP
 
    int factorial( const int );
+   int oneton( const int );
    bool TriangleBroken ( const int, const int, const int );
    bool IsEven( int );
    double _3j( const int, const int, const int, const int, const int, const int );

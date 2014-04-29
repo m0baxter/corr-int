@@ -56,8 +56,8 @@ def form_columns( readfile, writefile ):
 
 if __name__ == "__main__":
 	
-	readpath  = ".output/MCHF-un/z{0}/He2pHe_MCHF_resp_E{1}_z{0}.txt"
-	writepath = ".output/MCHF/z{0}/He2pHe_MCHF_resp_E{1}_z{0}.txt"
+	readpath  = "./output/MCHF-un/z{0}/He2pHe_MCHF_resp_E{1}_z{0}.txt"
+	writepath = "./output/MCHF/z{0}/He2pHe_MCHF_resp_E{1}_z{0}.txt"
 	
 	readfile  = open( readpath, "r")
 	writefile = open( writepath, "w")

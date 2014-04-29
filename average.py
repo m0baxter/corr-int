@@ -35,19 +35,17 @@ def read_probs( path ):
 
 mp.mp.dps = 7
 
-folder = ""
-
 for E in energy:
 		
-	z28 = read_probs( ".output/" + folder + "/z28/" + folder + "-E{0}-z28.txt".format(E) )
-	z29 = read_probs( ".output/" + folder + "/z29/" + folder + "-E{0}-z29.txt".format(E) )
-	z30 = read_probs( ".output/" + folder + "/z30/" + folder + "-E{0}-z30.txt".format(E) )
-	z31 = read_probs( ".output/" + folder + "/z31/" + folder + "-E{0}-z31.txt".format(E) )
-	z32 = read_probs( ".output/" + folder + "/z32/" + folder + "-E{0}-z32.txt".format(E) )
-	z33 = read_probs( ".output/" + folder + "/z33/" + folder + "-E{0}-z33.txt".format(E) )
-	z34 = read_probs( ".output/" + folder + "/z34/" + folder + "-E{0}-z34.txt".format(E) )
+	z28 = read_probs( "./output/MCHF/z28/He2pHe_MCHF_resp_E{0}_z28.txt".format(E) )
+	z29 = read_probs( "./output/MCHF/z29/He2pHe_MCHF_resp_E{0}_z29.txt".format(E) )
+	z30 = read_probs( "./output/MCHF/z30/He2pHe_MCHF_resp_E{0}_z30.txt".format(E) )
+	z31 = read_probs( "./output/MCHF/z31/He2pHe_MCHF_resp_E{0}_z31.txt".format(E) )
+	z32 = read_probs( "./output/MCHF/z32/He2pHe_MCHF_resp_E{0}_z32.txt".format(E) )
+	z33 = read_probs( "./output/MCHF/z33/He2pHe_MCHF_resp_E{0}_z33.txt".format(E) )
+	z34 = read_probs( "./output/MCHF/z34/He2pHe_MCHF_resp_E{0}_z34.txt".format(E) )
 		
-	writefile = open( ".output/MCHF/temp", 'w' )
+	writefile = open( "./MCHF/temp", 'w' )
 	
 	writefile.write("b p_T p_P Ic_TT Ic_PP Ic_TP ie_pTT ie_pTI ie_pII ie_pTP ie_pIP ie_pPP p_TT p_TI p_II p_TP p_PI p_PP\n")
 		
@@ -63,13 +61,13 @@ for E in energy:
 			
 	writefile.close()
 		
-	readfile = open( ".output/"+ folder + "/temp",'r')
-	writefile = open( ".output/" + folder + "/" + folder + "-E{0}.txt".format(E), 'w' )
+	readfile = open( "./MCHF/temp",'r')
+	writefile = open( "./MCHF/He2pHe_MCHF_resp_E{0}.txt".format(E), 'w' )
 		
 	col.form_columns(readfile, writefile)
 				
 	readfile.close()
 	writefile.close()
 		
-	os.remove(".output/" + folder + "/temp")
+	os.remove("./MCHF/temp")
 			

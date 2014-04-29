@@ -17,6 +17,13 @@ int factorial( const int n ) {
    return fact;
 }
 
+
+int oneton( const int n ) {
+
+   return ( (n % 2) == 0 )? 1 : -1;
+}
+
+
 bool TriangleBroken ( const int l1, const int l2, const int l3 ) {
    /*Tests whether the triangle condition |l1 - l2| <= l3 <= l1 - l2 is broken.
    If it does not it returns True, else False*/
@@ -37,8 +44,8 @@ double _3j( const int l1, const int m1, const int l2, const int m2, const int l3
 /*Calculates the Wigner 3-j coefficient .*/
 	
 
-   double n1, n2, n3, d1, d2, d3;
-   double norm, sum, phase;
+   int n1, n2, n3, d1, d2, d3, phase;
+   double norm, sum;
 
    //calculate the normalization factor:
    n1 = factorial(l3 + l1 - l2) * factorial(l3 - l1 + l2);
@@ -47,14 +54,14 @@ double _3j( const int l1, const int m1, const int l2, const int m2, const int l3
    d1 = factorial(l1 + l2 + l3 + 1);
    d2 = factorial(l1 - m1) * factorial(l1 + m1);
    d3 = factorial(l2 - m2) * factorial(l2 + m2);
-   norm = pow(-1.0, l1 - l2 - m3)  * sqrt( ( n1*n2*n3 ) / ( d1*d2*d3 ) );
+   norm = oneton(l1 - l2 - m3)  * sqrt( (1.0*n1*n2*n3 ) / ( 1.0*d1*d2*d3 ) );
 
    //determine the limits of the loop:
    int kmin = std::max(0, l2 - l1 - m3);
    int kmax = std::min(l3 - l1 + l2, l3 - m3);
 
    //The phase of the first term of the sum:
-   phase = pow( -1.0 , kmin + l2 + m2 );
+   phase = oneton( kmin + l2 + m2 );
 
    sum = 0.0;
 
@@ -66,9 +73,9 @@ double _3j( const int l1, const int m1, const int l2, const int m2, const int l3
       d2 = factorial(l3 - m3 - k);
       d3 = factorial(k + l1 - l2 + m3);
 
-      double temp = phase * ( n1*n2 ) / (  d1*d2*d3 ) ;
+      double temp = phase * ( 1.0*n1*n2 ) / ( 1.0*d1*d2*d3 ) ;
 
-      phase = -phase;
+      phase *= -1;
       sum += norm*temp;
    }
 

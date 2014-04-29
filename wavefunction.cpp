@@ -418,7 +418,7 @@ void WaveFunction::generate_integral_table_wb( const char centre, const double N
    
    int c = TP_toint(centre);
 
-#  pragma omp parallel for num_threads(12) \
+#  pragma omp parallel for num_threads(300) \
      schedule(guided)
    for (int n1 = 1; n1 < 5; ++n1) {
       for (int l1 = 0; l1 < n1; ++l1) {
@@ -621,7 +621,7 @@ double  WaveFunction::correlationintegral_wb( const char c, const int k ) {
       generate_integral_table_wb(c,N_e);
 
       //Sweep through the terms of the wave function:
-      #pragma omp parallel reduction(+:Ic) num_threads(12)
+      #pragma omp parallel reduction(+:Ic) num_threads(300)
       {
       #pragma omp for collapse(2) \
               schedule(guided)
@@ -645,7 +645,7 @@ double  WaveFunction::correlationintegral_wb( const char c, const int k ) {
                               double G2 =  gaunt ( T[i][1][1], T[i][1][2], T[j][1][1], -T[j][1][2], L2, M2);
 
                               //calculate the pahse we neglected untill now:
-                              double phase = pow(-1.0, T[j][0][2] + T[j][1][2] );
+                              int phase = oneton( T[j][0][2] + T[j][1][2] );
 
                               //Perform the two sums from the P_lm functions:
                               for (int n1 = 1; n1 < MAXn; ++n1) {
@@ -674,10 +674,10 @@ double  WaveFunction::correlationintegral_wb( const char c, const int k ) {
 
                                                                         double G4 = gaunt( l2, m2 - l2, lp2, -(mp2 - lp2), L2, -M2 );
 
-                                                                        double phase1 = pow(-1.0, mp1 - lp1 + M1);
-                                                                        double phase2 = pow(-1.0, mp2 - lp2 + M2);
+                                                                        int phase1 = oneton( mp1 - lp1 + M1 );
+                                                                        int phase2 = oneton( mp2 - lp2 + M2 );
                                                                         
-                                                                        double step = real( a(c,k,n1,l1,m1) * conj( a(c,k,np1,lp1,mp1) ) * a(c,k,n2,l2,m2) * conj( a(c,k,np2,lp2,mp2) ) * temp * phase1 * G3 * phase2 * G4 );
+                                                                        double step = std::real( a(c,k,n1,l1,m1) * conj( a(c,k,np1,lp1,mp1) ) * a(c,k,n2,l2,m2) * conj( a(c,k,np2,lp2,mp2) ) )  * temp * phase1 * G3 * phase2 * G4;
                                                                         Ic += step;
                                                                        
                                                                      }
